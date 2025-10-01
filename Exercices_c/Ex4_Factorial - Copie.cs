@@ -33,7 +33,7 @@ namespace Serie1
             }
             else
             {
-                factoreil = n * Factorial_(n - 1);
+                factoreil = n * FactorialRecursive(n - 1);
             }
             Console.WriteLine($"la factorielle de {n} est : {factoreil}");
             return factoreil;

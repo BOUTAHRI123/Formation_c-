@@ -25,10 +25,43 @@ namespace Serie2
             return;
         }
 
-        public static int CheckMorpion(/*typeGrille grille */)
+        public static int CheckMorpion(char[,] tab)
         {
-            //TODO
-            return -1;
+            int i;
+            bool valide = true;
+            int joueur=0;
+            for( i=0; i<tab.GetLength(0); i++)
+            {
+                if(tab[i,0]!= ' ' && tab[i,0]==tab[i,1] && tab[i,1]== tab[i, 2])
+                {
+                    joueur = (tab[i, 0] == 'X' ?  1: 2);
+                   
+                }
+                else if(tab[0, i] != ' ' && tab[0, i] == tab[1, i] && tab[1, i] == tab[2, i]){
+                    joueur = (tab[0, i] == 'X' ? 1 : 2);
+                    
+                }
+                else if (tab[0, 0] != ' ' && tab[0, 0] == tab[1, 1] && tab[1, 1] == tab[2, 2]){
+                    joueur = (tab[0, 0] == 'X' ? 1 : 2);
+                    
+                }
+                else if (tab[0, 2] != ' ' && tab[0, 2] == tab[1, 1] && tab[1, 1] == tab[2, 0]){
+                    joueur = (tab[0, 2] == 'X' ? 1 : 2);
+                }
+
+            }
+            Console.WriteLine($"La partie est  terminée , le joueur qui a gagné est {joueur}");
+            foreach (char c in tab)
+            {
+                if(c == ' ')
+                {
+                    valide = false;
+                    Console.WriteLine("La partie n'est pas terminée");
+                }
+            }
+
+
+            return joueur;
         }
     }
 }
