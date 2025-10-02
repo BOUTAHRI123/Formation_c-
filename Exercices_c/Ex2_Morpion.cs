@@ -13,6 +13,7 @@ namespace Serie2
         {
             int i;
             int j;
+            
             Console.WriteLine("Affichage grille de Morpion :");
             for (i=0;i < tab.GetLength(0);i++)
             {

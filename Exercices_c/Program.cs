@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Serie2;
 using Serie3;
+using Serie4;
 
 
 namespace Serie1
@@ -73,6 +74,19 @@ namespace Serie1
             C.DecryptCesarCode(L2);
             String L3=C.GeneralCesarCode(l, 3);
             C.GeneralDecryptCesarCode(L3, 3);
+            String code = "S...H...A...M...E.......B...O...U...T...A...H...R...I";
+            Morse morse = new Morse();
+            morse.LettersCount(code);
+            morse.WordsCount(code);
+            String Code2 = "===.=.===.=...===.===.===...===.=.=...=.....===.===...===.===.===...=.===.=...=.=.=...=";
+            morse.MorseTranslation(Code2);
+            String Code3 = "===.=.===.=...===.===.===...===.=.=....=........===.===...===..===..===...=.===.=...=.=.=...=";
+            morse.EfficientMorseTranslation(Code3);
+            morse.MorseEncryption("CODE");
+            String filePath = @"C:\Users\Formation\Desktop\formation_c#\FormationCSharp\\fichier-Note.csv";
+            String fileout = @"C:\Users\Formation\Desktop\formation_c#\FormationCSharp\\Notes.csv";
+            ClassCouncil.SchoolMeans(filePath, fileout);
+            char[,] tab = { { '_', '_', '_' }, { '_', '_', '_' }, { '_', '_', '_' } };
             Console.ReadKey();
 
         }

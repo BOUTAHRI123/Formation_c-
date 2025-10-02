@@ -44,9 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ex1_AdministrativeTasks.cs" />
+    <Compile Include="Ex1_ClassCouncil.cs" />
     <Compile Include="Ex1_ElementaryOperations.cs" />
     <Compile Include="Ex1_TasksTables.cs" />
     <Compile Include="Ex2_CesarCode.cs" />
+    <Compile Include="Ex2_Morpion%281%29.cs" />
     <Compile Include="Ex2_Morpion.cs" />
     <Compile Include="Ex2_SpeakingClock.cs" />
     <Compile Include="Ex3_MorseCode.cs" />
