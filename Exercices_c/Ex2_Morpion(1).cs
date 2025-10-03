@@ -68,9 +68,20 @@ namespace Serie4
 
         }
 
-        public static void DisplayMorpion(/*typeGrille grille */)
+        public static void DisplayMorpion(char[,] tab)
         {
-            //TODO
+            int i;
+            int j;
+            
+            Console.WriteLine("Affichage grille de Morpion :");
+            for (i=0;i < tab.GetLength(0);i++)
+            {
+                for (j = 0; j < tab.GetLength(1); j++)
+                {
+                    Console.Write($"{tab[i,j]} ");
+                }
+                Console.WriteLine();
+            }
             return;
         }
 
