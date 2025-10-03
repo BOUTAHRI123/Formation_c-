@@ -43,14 +43,14 @@ namespace Serie2
                 int milieu = (int)m;
                 if(tableau[milieu] == valeur)
                     {
-                          index = milieu;
-                          
+                    index = milieu;
+                    Console.WriteLine($"L'indice est : {index} , Valeur trouvé ");
                     return index;
                     }
                     else if(tableau[milieu] < valeur){
 
                           debut = milieu + 1;
-                }
+                    }
                     else if(tableau[milieu] > valeur)
                     {
                           fin = milieu - 1;
@@ -59,12 +59,9 @@ namespace Serie2
                
             }
             
-            if (index != -1)
+            if (index == -1)
             {
-                Console.WriteLine($"L'indice est : {index} , Valeur trouvé ");
-            }
-            else
-            {
+            
                 Console.WriteLine($"L'indice est : {index} , Valeur introuvable !");
             }
 
