@@ -101,7 +101,6 @@ namespace Serie4
             if (Tab == null || Tab.GetLength(0) != 3 || Tab.GetLength(1) != 3)
                 throw new ArgumentException("La Table doit etre de dimension 3x3 !");
 
-            
             for (int i = 0; i < 3; i++)
             {
                 // les lignes
@@ -113,21 +112,22 @@ namespace Serie4
                     return Tab[0, i] == 'X' ? 1 : 2;
             }
 
-            // diagonale principale
-            if (Tab[0, 0] != '_' && Tab[0, 0] == Tab[1, 1] && Tab[1, 1] == Tab[2, 2])
-                return Tab[0, 0] == 'X' ? 1 : 2;
+                // diagonale principale
+                if (Tab[0, 0] != '_' && Tab[0, 0] == Tab[1, 1] && Tab[1, 1] == Tab[2, 2])
+                    return Tab[0, 0] == 'X' ? 1 : 2;
 
-            // diagonale secondaire
-            if (Tab[0, 2] != '_' && Tab[0, 2] == Tab[1, 1] && Tab[1, 1] == Tab[2, 0])
-                return Tab[0, 2] == 'X' ? 1 : 2;
+                // diagonale secondaire
+                if (Tab[0, 2] != '_' && Tab[0, 2] == Tab[1, 1] && Tab[1, 1] == Tab[2, 0])
+                    return Tab[0, 2] == 'X' ? 1 : 2;
 
-            // partie non terminée = existnce de '_' encore dans la table
-            foreach (char c in Tab)
-                if (c == '_')
-                    return -1;
+                // partie non terminée = existnce de '_' encore dans la table
+                foreach (char c in Tab)
+                    if (c == '_')
+                        return -1;
 
-            //personne n'a gagné 
-            return 0;
+                //personne n'a gagné 
+                return 0;
+            
         }
     }
 }
