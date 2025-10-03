@@ -10,24 +10,29 @@ namespace Serie3
     {
         public static string EliminateSeditiousThoughts(string text, string[] prohibitedTerms)
         {
+            // Afficher le fichier d'entrée 
             Console.WriteLine($"le texte d'entrée est : {text}");
+            // declaration du StringBuilder afin de stocker le mot en sortie du code 
             StringBuilder mot2 = new StringBuilder();
             string textM = " ";
             string m;
             int i;
+            // Parcouris tous les mots afin de verfier si le mot existe dans mon texte ou pas 
             foreach(string mot in prohibitedTerms)
             {
-
+                // Initialiser le mot codée
                 mot2.Clear();
                 m = mot;
                 if (text.Contains(m))
                 {
                     for (i = 0; i < m.Length; i++)
                     {
+                        // Ajouter les X au mot2 jusqu'on attend la longeur du mot 
                         mot2.Append("X");
                     }
-                    
+                    // remplacer le mot dans le texte par le mot codée et stocker le resultat dans textM
                     textM=text.Replace(m, mot2.ToString());
+                    // reprendre le texte d'entrée par le texte modifié
                     text=text.Replace(text, textM);
                 }
                 
