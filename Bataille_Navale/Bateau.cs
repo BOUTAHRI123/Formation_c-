@@ -24,11 +24,19 @@ namespace Bataille_Navale
         // Implémentation de la méthode Touché 
         public void Touché(int x, int y)
         {
-            Position P = new Position(x, y);
-            if(P.Statut == Position.Etat.Coulé)
+            // Pourquoi tu crées une position P ?!? 
+            /*Position P = new Position(x, y);
+            if (P.Statut == Position.Etat.Coulé)
             {
-                   P.Touché();
+                P.Touché();
+            }*/
 
+            for (int i = 0; i < Positions.Count; i++)
+            {
+                if (Positions[i].X == x && Positions[i].Y == y)
+                {
+                    Positions[i].Touché();
+                }
             }
         }
 
@@ -38,15 +46,20 @@ namespace Bataille_Navale
         // Implémentation de la methode EstCoulé() (Question 2/b)
         public bool EstCoulé()
         {
-            
-            foreach( Position p in Positions)
+
+            foreach (Position p in Positions)
             {
-                if(p.Statut == Position.Etat.Touché)
+                if (p.Statut != Position.Etat.Touché && p.Statut != Position.Etat.Coulé)
+                {
+                    return false;
+                }
+
+                /*if (p.Statut == Position.Etat.Touché)
                 {
                     return true;
-                }
+                }*/
             }
-            return false;
+            return true;
         }
 
     }
