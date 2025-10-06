@@ -33,6 +33,7 @@ namespace Bataille_Navale
             int StatuN = 0;
             while (StatuN == 0)
             {
+                // L'idée est OK, à développer
                 int x = R.Next();
                 int y = R.Next();
                 bool Statut = false;
@@ -75,7 +76,12 @@ namespace Bataille_Navale
                 string val = Console.ReadLine();
                 string[] position = val.Split(',', '.');
 
-				// Partie à implémenter
+                // Partie à implémenter
+                if (int.TryParse(position[0], out int pos1) && position.Length == 2 && int.TryParse(position[1], out int pos2) && pos1 >= 1 && pos1 <= 10 && pos2 >= 1 && pos2 <= 10)
+                {
+                    cpt++;
+                    Viser(pos1 - 1, pos2 - 1);
+                }
             }
 
             Console.ForegroundColor = ConsoleColor.White;
@@ -94,6 +100,7 @@ namespace Bataille_Navale
         /// <returns></returns>
         private bool PlacerBateau(int x, int y, int taille, bool estVertical)
         {
+            // Je ne comprends pas trop ce que tu cherches à faire dans ce bloc de code .
             List<Position> list = new List<Position>();
             foreach (Bateau B in Bateaux)
             {
@@ -137,23 +144,18 @@ namespace Bataille_Navale
                         {
                             // Modifier le statut de la position à un statut Touché
                             P.Touché();
+                            return;
                         }
-                        else
+                        /*else
                         {
                             // met la position dans le plateau qui avait les Coordonnées x,y en Statut pleufé
                             PlateauJeu[x,y].Plouf();
-                        }
+                        }*/
 
                     }
                 }
-               
-
-
-
-
+                PlateauJeu[x, y].Plouf();
             }
-
-
         }
 
         /// <summary>
@@ -225,14 +227,13 @@ namespace Bataille_Navale
                 // Parcourir toutes les positions du Bateau
                 foreach (Position P in B.Positions)
                 {
-                    if (P.Statut == Position.Etat.Coulé)
+                    if (P.Statut != Position.Etat.Coulé)
                     {
-
+                        return false;
                     }
-                    
                 }
             }
-            return false;
+            return true;
         }
     }
 }
