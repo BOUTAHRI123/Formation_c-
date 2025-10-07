@@ -15,5 +15,14 @@ namespace Gestion_Systéme_bancaire
         public int CompteDestination { get; set; }
         public string Status { get; set; }
 
+        public Transaction(string num,DateTime date,decimal montant,int compte1,int compte2)
+        {
+            NumeroTransaction = num;
+            Date = date;
+            Montant = montant;
+            CompteSource = compte1;
+            CompteDestination = compte2;
+        }
+
     }
 }

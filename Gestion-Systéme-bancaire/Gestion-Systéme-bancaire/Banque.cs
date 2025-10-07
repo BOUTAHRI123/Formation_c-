@@ -29,16 +29,29 @@ namespace Gestion_Systéme_bancaire
                 {
                     string[] valeur;
                     valeur = line.Split(';');
-                    CompteBancaire compte = new CompteBancaire
+                    foreach(CarteBancaire c in Cartes)
                     {
-                        Identifiant = Int32.Parse(valeur[0]),
-                        TypeCompte = valeur[1],
-                        Solde = decimal.Parse(valeur[3])
-
-                    };
-
-                    Comptes.Add(compte);
+                        if (valeur[1] == c.NumeroCarte)
+                        {
+                            if(valeur[2] == "Courant" || valeur[2] == "Livret")
+                            {
+                                if (string.IsNullOrEmpty(valeur[3]))
+                                {
+                                    valeur[3] = "0";
+                                }
+                                CompteBancaire compte = new CompteBancaire((Int32.Parse(valeur[0])), (decimal.Parse(valeur[3])), valeur[2], valeur[1]);
+                                Comptes.Add(compte);
+                            }
+                        }
+                            
+                                  
+                    }
                 }
+                   
+            }
+            foreach (CarteBancaire c in Cartes)
+            {
+                c.ComptesAssocies = CompteAssocie();
             }
             return Comptes;
         }
@@ -54,11 +67,12 @@ namespace Gestion_Systéme_bancaire
                 {
                     string[] valeur;
                     valeur = line.Split(';');
-                    CarteBancaire carte = new CarteBancaire
+                    if(string.IsNullOrEmpty(valeur[1]))
                     {
-                       NumeroCarte = valeur[0],
-                       Plafond = decimal.Parse(valeur[1])
-                    };
+                        valeur[1] = "500";
+                    }
+
+                    CarteBancaire carte = new CarteBancaire(valeur[0], decimal.Parse(valeur[1]));
 
                     Cartes.Add(carte);
                 }
@@ -77,84 +91,74 @@ namespace Gestion_Systéme_bancaire
                     string[] valeur;
                     valeur = line.Split(';');
                     DateTime D;
-                    if ((D = DateTime.ParseExact(valeur[1], "dd/MM/AAAA HH:mm:ss", CultureInfo.CurrentCulture)) != null)
+                    if ((D = DateTime.ParseExact(valeur[1], "dd/MM/yyyy HH:mm:ss", CultureInfo.CurrentCulture)) != null)
                     {
-                        Transaction T = new Transaction
-                        {
-                            NumeroTransaction = valeur[0],
-                            Date = D,
-                            Montant = decimal.Parse(valeur[2]),
-                            CompteSource = Int32.Parse(valeur[3]),
-                            CompteDestination = Int32.Parse(valeur[4])
-                        };
-
+                        Transaction T = new Transaction(valeur[0], D, decimal.Parse(valeur[2]), Int32.Parse(valeur[3]), Int32.Parse(valeur[4]));
                         Transactions.Add(T);
                     }
-
-
+                    else
+                    {
+                        continue;
+                    }
 
                 }
 
-
             }
+            foreach(CarteBancaire c in Cartes)
+            {
+                c.Historique = LireHistorique();
+            }
+            
             return Transactions;
         }
 
-        public List<Transaction> LireHistorique(string chemin)
+        public List<Transaction> LireHistorique()
         {
             List<Transaction> liste = null;
-            foreach(CarteBancaire Carte in Cartes)
+            foreach(Transaction t in Transactions)
             {
-                foreach (CompteBancaire cpt in Comptes)
+                foreach (CarteBancaire carte in Cartes)
                 {
-                    liste = Carte.Historique = new List<Transaction>();
-                    using (StreamReader File = new StreamReader(chemin))
+                    liste = carte.Historique = new List<Transaction>();
+                    foreach (CompteBancaire cpt in Comptes)
                     {
-                        string line;
-                        while ((line = File.ReadLine()) != null)
+                        if (t.CompteSource == cpt.Identifiant || t.CompteDestination == cpt.Identifiant)
                         {
-                            string[] valeur;
-                            valeur = line.Split(';');
-                            DateTime D;
-
-                            if ((D = DateTime.ParseExact(valeur[1], "dd/MM/AAAA HH:mm:ss", CultureInfo.CurrentCulture)) != null)
-                            {
-                                if ((Int32.Parse(valeur[4])) == cpt.Identifiant || (Int32.Parse(valeur[3])) == cpt.Identifiant)
-                                {
-                                    Transaction T = new Transaction
-                                    {
-                                        NumeroTransaction = valeur[0],
-                                        Date = D,
-                                        Montant = decimal.Parse(valeur[2]),
-                                        CompteSource = Int32.Parse(valeur[3]),
-                                        CompteDestination = Int32.Parse(valeur[4])
-
-
-                                    };
-                                    liste.Add(T);
-                                }
-
-
-
-                            }
-
-
-
+                                liste.Add(t);
+                      
                         }
 
-
-
                     }
+
+
                 }
 
-
-                    
             }
-              return liste;
+            return liste;
         }
-       
-            
-       
+        public  static List<CompteBancaire> CompteAssocie()
+        {
+            List<CompteBancaire> liste2 = null;
+            foreach (CompteBancaire cpt in Comptes)
+            {
+                foreach (CarteBancaire carte in Cartes)
+                {
+                    liste2 = carte.ComptesAssocies = new List<CompteBancaire>();
+                   
+                        if (carte.NumeroCarte == cpt.NumeroCarte)
+                        {
+                            liste2.Add(cpt);
+
+                        }
+                   
+                }
+
+            }
+            return liste2;
+        }
+
+
+
         public CompteBancaire TestCompte(int Id)
         {
             CompteBancaire compte = null;
@@ -162,14 +166,8 @@ namespace Gestion_Systéme_bancaire
             {
                 if(C.Identifiant == Id)
                 {
-                
-                 compte = new CompteBancaire
-                     {
-                        Identifiant = Id,
-                        Solde = C.Solde,
-                        TypeCompte = C.TypeCompte,
-                        NumeroCarte = C.NumeroCarte
-                     };
+
+                    compte = C;
 
                 }
             }
@@ -186,13 +184,7 @@ namespace Gestion_Systéme_bancaire
                 if (Car.NumeroCarte == Num)
                 {
 
-                    Carte = new CarteBancaire
-                    {
-                        NumeroCarte = Num,
-                        Plafond = Car.Plafond
-                     
-                    };
-
+                    Carte = Car;
                 }
             }
 
@@ -202,10 +194,101 @@ namespace Gestion_Systéme_bancaire
 
         public bool EffectuerTransaction(Transaction t)
         {
-           
+            bool statut = false;
+            int source;
+            int destination;
+            CompteBancaire cpt;
+            CarteBancaire carte;
+            if (t.CompteSource == 0)
+            {
+                destination = t.CompteDestination;
+                
+                if((cpt = TestCompte(destination)) != null){
+
+                    statut = cpt.DepotArgent(t.Montant);
+                }
+                /*foreach ( CompteBancaire cpt in Comptes)
+                {
+                    if(cpt.Identifiant == destination)
+                    {
+                        statut = cpt.DepotArgent(t.Montant);
+                    }
+                }*/
+                
+            }
+            else if(t.CompteDestination == 0)
+            {
+                source = t.CompteSource;
+
+                if ((cpt = TestCompte(source)) != null)
+                {
+                    if((carte = TestCarte(cpt.NumeroCarte)) != null)
+                    {            
+                    
+                       
+                       bool sttransaction = carte.PeutEffectuer(t.Montant, t.Date);
+                       if (sttransaction)
+                       {
+                           statut = cpt.RetireArgent(t.Montant);
+                       }
+                            
+                        
+                    }
+                }
+                
+            }
+            else
+            {
+                source = t.CompteSource;
+                destination = t.CompteDestination;
+                CompteBancaire cpt2;
+                if ((cpt = TestCompte(source)) != null )
+                {
+                    if ((carte = TestCarte(cpt.NumeroCarte)) != null)
+                    {
+                        bool sttransaction = carte.PeutEffectuer(t.Montant, t.Date);
+                        if (sttransaction)
+                        {
+                            statut = cpt.RetireArgent(t.Montant);
+                            if ((cpt2 = TestCompte(destination)) != null)
+                            {
+                                statut = cpt2.DepotArgent(t.Montant);
+                            }
 
 
-            return true;
+                        }
+                    }
+
+                }
+
+               
+            }
+
+
+            return statut;
+        }
+
+        public void EcritSortie(string chemin)
+        {
+            using(StreamWriter sortie = new StreamWriter(chemin))
+            { 
+                foreach(Transaction t in Transactions)
+                {
+                    bool statut = EffectuerTransaction(t);
+                    if (statut)
+                    {
+                        sortie.WriteLine($"{(t.NumeroTransaction)};OK");
+                       
+                    }
+                    else
+                    {
+                        sortie.WriteLine($"{(t.NumeroTransaction)};KO");
+                    }
+                }
+                              
+            }
+
+            Console.WriteLine("C'est bien fait!");
         }
 
 

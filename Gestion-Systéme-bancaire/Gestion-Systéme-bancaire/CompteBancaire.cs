@@ -10,10 +10,17 @@ namespace Gestion_Systéme_bancaire
     public class CompteBancaire
     {
         public int Identifiant { get; set; }
-        public decimal Solde { get; set; }
+        public decimal Solde { get; private set; }
         public string TypeCompte { get; set; }
         public string NumeroCarte { get; set; } // lié à la carte
         
+        public CompteBancaire(int idt, decimal solde, string type, string numero)
+        {
+            Identifiant = idt;
+            Solde = solde;
+            TypeCompte = type;
+            NumeroCarte = numero;
+        }
         
         public bool DepotArgent(decimal Montant)
         {
