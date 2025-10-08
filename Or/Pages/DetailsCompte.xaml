@@ -60,6 +60,19 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
+                    <GridViewColumn Header="Opération" Width="100">
+
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding TypeTransaction}"
+                           Style="{StaticResource TextColumnStyle}"
+                           TextAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
                     <GridViewColumn Header="Date" Width="200">
 
                         <GridViewColumn.CellTemplate>

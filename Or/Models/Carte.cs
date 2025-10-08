@@ -63,6 +63,7 @@ namespace Or.Models
             decimal sommeHisto = montant + retraitsHisto.Sum(x => x.Montant);
             return sommeHisto < Plafond;
         }
+        
 
         /// <summary>
         /// Est-ce que les contraintes sur les comptes bancaires sont respectées ? 
@@ -129,6 +130,34 @@ namespace Or.Models
 
             return operation == Operation.InterCompte &&
                    Expediteur.TypeDuCompte == TypeCompte.Courant && Destinataire.TypeDuCompte == TypeCompte.Courant ;
+        }
+
+        public decimal TotalTran(DateTime Date)
+        {
+            decimal Totale = 0;
+            //List<Transaction> transac = SqlRequests.ListeTransactionsAssociesCarte(numCarte);
+            foreach (Transaction t in Historique)
+            {
+
+                TimeSpan diff = Date - t.Horodatage;
+                //if (t.CompteDestination == 0 && Date.AddDays(-10) >= t.Date )
+                if (t.Destinataire == 0 && diff.TotalDays <= 10)
+                {
+                    Totale += t.Montant;
+                }
+            }
+
+
+            return Totale;
+        }
+
+        public decimal SoldeCarteActuel(DateTime date)
+        {
+            decimal Pactuel = 0;
+            //CartePorteur = SqlRequests.InfosCarte(numCarte);
+            Pactuel = Plafond - TotalTran(date);
+
+            return Pactuel;
         }
 
     }

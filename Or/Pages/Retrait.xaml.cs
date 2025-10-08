@@ -13,10 +13,21 @@ namespace Or.Pages
     /// <summary>
     /// Logique d'interaction pour Retrait.xaml
     /// </summary>
+    
+    public enum code
+    {
+        PlafDepasse = 0,
+        MontantInv = 1,
+        SoldeInsuf = 2,
+        VirInterdit = 3
+
+
+    }
     public partial class Retrait : PageFunction<long>
     {
         Carte CartePorteur { get; set; }
         Compte ComptePorteur { get; set; }
+       
         public Retrait(long numCarte)
         {
             InitializeComponent();
@@ -30,6 +41,7 @@ namespace Or.Pages
 
             PlafondMaxRetrait.Text = CartePorteur.Plafond.ToString("C2");
             Solde.Text = ComptePorteur.Solde.ToString("C2");
+            PlafondActuelRetrait.Text = CartePorteur.SoldeCarteActuel(DateTime.Now).ToString("C2");
         }
 
         private void Retour_Click(object sender, RoutedEventArgs e)
@@ -61,5 +73,7 @@ namespace Or.Pages
                 MessageBox.Show("Montant invalide");
             }
         }
+      
+       
     }
 }

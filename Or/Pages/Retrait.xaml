@@ -36,6 +36,9 @@
             <Label x:Name="labelP" Content="Plafond maximum de retrait" HorizontalAlignment="Stretch" Margin="0,0,0,8" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27" FontSize="14"/>
             <TextBlock x:Name="PlafondMaxRetrait" HorizontalAlignment="Left" Margin="0,0,0,8" TextAlignment="left" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Background="#FFD2D0D0" Height="20" FontSize="14"/>
 
+            <Label x:Name="labelP2" Content="Plafond de retrait actualisé" HorizontalAlignment="Stretch" Margin="0,0,0,8" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27" FontSize="14"/>
+            <TextBlock x:Name="PlafondActuelRetrait" HorizontalAlignment="Left" Margin="0,0,0,8" TextAlignment="left" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Background="#FFD2D0D0" Height="20" FontSize="14"/>
+            
             <Label x:Name="labelS" Content="Solde compte courant" HorizontalAlignment="Stretch" Margin="0,0,0,8" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27" FontSize="14"/>
             <TextBlock x:Name="Solde" HorizontalAlignment="Left" Margin="0,0,0,8" TextAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Background="#FFD2D0D0" Height="20" FontSize="14"/>
         </StackPanel>

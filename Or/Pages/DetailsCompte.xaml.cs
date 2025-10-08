@@ -22,6 +22,7 @@ namespace Or.Pages
             IdCompte.Text = c.Id.ToString();
             TypeCompte.Text = c.TypeDuCompte.ToString();
             Solde.Text = c.Solde.ToString("C2");
+            
 
             List<Transaction> transactions = SqlRequests.ListeTransactionsAssociesCompte(compte);
 

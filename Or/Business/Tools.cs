@@ -68,5 +68,26 @@ namespace Or.Business
                 return Operation.InterCompte;
             }
         }
+        public static string TypeTransacConverter(Operation op)
+        {
+            switch ((int)op)
+            {
+               
+                case 0:
+                    return "Dépot";
+
+                case 1:
+                    return "Retrait";
+
+                case 2:
+                    return "Virement";
+
+                default:
+                    return "Pas de Type";
+                   
+            }
+
+          
+        }
     }
 }

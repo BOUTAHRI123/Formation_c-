@@ -1,4 +1,5 @@
 ﻿using System;
+using Or.Business;
 
 namespace Or.Models
 {
@@ -9,6 +10,7 @@ namespace Or.Models
         public decimal Montant { get; set; }
         public int Expediteur { get; set; }
         public int Destinataire { get; set; }
+        public string TypeTransaction { get; set; }
 
         public Transaction(int idTransaction, DateTime horodatage, decimal montant, int expediteur, int destinataire)
         {
@@ -17,6 +19,9 @@ namespace Or.Models
             Montant = montant;
             Expediteur = expediteur;
             Destinataire = destinataire;
+            TypeTransaction = Tools.TypeTransacConverter(Tools.TypeTransaction(expediteur, destinataire));
         }
+
+      
     }
 }
