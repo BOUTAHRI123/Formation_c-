@@ -12,9 +12,9 @@ namespace Gestion_Systéme_bancaire
         public int Identifiant { get; set; }
         public decimal Solde { get; private set; }
         public string TypeCompte { get; set; }
-        public string NumeroCarte { get; set; } // lié à la carte
+        public long NumeroCarte { get; set; } // lié à la carte
         
-        public CompteBancaire(int idt, decimal solde, string type, string numero)
+        public CompteBancaire(int idt, decimal solde, string type, long numero)
         {
             Identifiant = idt;
             Solde = solde;

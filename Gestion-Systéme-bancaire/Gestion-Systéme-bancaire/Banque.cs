@@ -26,12 +26,20 @@ namespace Gestion_Systéme_bancaire
             {
                 string line;
                 while ((line = File.ReadLine()) != null)
-                {
+                {                 
                     string[] valeur;
                     valeur = line.Split(';');
+                    if(valeur.Length < 4)
+                    {
+                        continue;
+                    }
+                    if(Int32.Parse(valeur[0]) <= 0)
+                    {
+                        continue;
+                    }
                     foreach(CarteBancaire c in Cartes)
                     {
-                        if (valeur[1] == c.NumeroCarte)
+                        if ((long)Convert.ToDouble(valeur[1]) == c.NumeroCarte)
                         {
                             if(valeur[2] == "Courant" || valeur[2] == "Livret")
                             {
@@ -39,9 +47,17 @@ namespace Gestion_Systéme_bancaire
                                 {
                                     valeur[3] = "0";
                                 }
-                                CompteBancaire compte = new CompteBancaire((Int32.Parse(valeur[0])), (decimal.Parse(valeur[3])), valeur[2], valeur[1]);
+                                CompteBancaire compte = new CompteBancaire((Int32.Parse(valeur[0])), (decimal.Parse(valeur[3])), valeur[2], (long)Convert.ToDouble(valeur[1]));
                                 Comptes.Add(compte);
                             }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            continue;
                         }
                             
                                   
@@ -51,7 +67,7 @@ namespace Gestion_Systéme_bancaire
             }
             foreach (CarteBancaire c in Cartes)
             {
-                c.ComptesAssocies = CompteAssocie();
+                c.ComptesAssocies = CompteAssocie(c);
             }
             return Comptes;
         }
@@ -67,13 +83,24 @@ namespace Gestion_Systéme_bancaire
                 {
                     string[] valeur;
                     valeur = line.Split(';');
-                    if(string.IsNullOrEmpty(valeur[1]))
+                    long num=0;
+                    
+                    if (long.TryParse(valeur[0], out num) == false && valeur[0].Length != 16 )
+                    {
+                        continue;
+                    }
+                    if (string.IsNullOrEmpty(valeur[1]))
                     {
                         valeur[1] = "500";
                     }
 
-                    CarteBancaire carte = new CarteBancaire(valeur[0], decimal.Parse(valeur[1]));
-
+                    if (decimal.Parse(valeur[1]) < 500 || decimal.Parse(valeur[1]) > 3000)
+                    {
+                        continue;
+                    }
+                   
+                    CarteBancaire carte = new CarteBancaire(num,decimal.Parse(valeur[1]));
+                    //(long)Convert.ToDouble(valeur[0])
                     Cartes.Add(carte);
                 }
             }
@@ -90,68 +117,78 @@ namespace Gestion_Systéme_bancaire
                 {
                     string[] valeur;
                     valeur = line.Split(';');
-                    DateTime D;
-                    if ((D = DateTime.ParseExact(valeur[1], "dd/MM/yyyy HH:mm:ss", CultureInfo.CurrentCulture)) != null)
-                    {
-                        Transaction T = new Transaction(valeur[0], D, decimal.Parse(valeur[2]), Int32.Parse(valeur[3]), Int32.Parse(valeur[4]));
-                        Transactions.Add(T);
-                    }
-                    else
+                    DateTime date;
+                    int source;
+                    int Des;
+                    if (valeur.Length < 5)
                     {
                         continue;
                     }
+                    if (decimal.Parse(valeur[2]) < 0)
+                    {
+                        continue;
+                    }
+                    if (Int32.Parse(valeur[0]) <= 0)
+                    {
+                        continue;
+                    }
+                    if (!DateTime.TryParseExact(valeur[1], "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture,DateTimeStyles.None, out date))
+                    {
+                        continue;
+                    }
+                    if(!int.TryParse(valeur[3], out source)){
+                        continue;
+                    }
+                    if (!int.TryParse(valeur[4], out Des))
+                    {
+                        continue;
+                    }
+
+                    Transaction T = new Transaction(Int32.Parse(valeur[0]), date, decimal.Parse(valeur[2]), source, Des);
+                    Transactions.Add(T);
 
                 }
 
             }
             foreach(CarteBancaire c in Cartes)
             {
-                c.Historique = LireHistorique();
+                c.Historique = LireHistorique(c);
             }
             
             return Transactions;
         }
 
-        public List<Transaction> LireHistorique()
+        public List<Transaction> LireHistorique(CarteBancaire c)
         {
-            List<Transaction> liste = null;
+            List<Transaction> liste = new List<Transaction>();
             foreach(Transaction t in Transactions)
             {
-                foreach (CarteBancaire carte in Cartes)
+                foreach (CompteBancaire cpt in c.ComptesAssocies)
                 {
-                    liste = carte.Historique = new List<Transaction>();
-                    foreach (CompteBancaire cpt in Comptes)
+                    if (t.CompteSource == cpt.Identifiant || t.CompteDestination == cpt.Identifiant)
                     {
-                        if (t.CompteSource == cpt.Identifiant || t.CompteDestination == cpt.Identifiant)
-                        {
-                                liste.Add(t);
-                      
-                        }
+                        liste.Add(t);
 
                     }
-
 
                 }
 
             }
             return liste;
         }
-        public  static List<CompteBancaire> CompteAssocie()
+        public  static List<CompteBancaire> CompteAssocie(CarteBancaire C)
         {
-            List<CompteBancaire> liste2 = null;
+            List<CompteBancaire> liste2 = new List<CompteBancaire>();
             foreach (CompteBancaire cpt in Comptes)
             {
-                foreach (CarteBancaire carte in Cartes)
-                {
-                    liste2 = carte.ComptesAssocies = new List<CompteBancaire>();
-                   
-                        if (carte.NumeroCarte == cpt.NumeroCarte)
+               
+                        if (C.NumeroCarte == cpt.NumeroCarte)
                         {
                             liste2.Add(cpt);
 
                         }
                    
-                }
+                
 
             }
             return liste2;
@@ -176,7 +213,7 @@ namespace Gestion_Systéme_bancaire
             return compte;
         }
 
-        public CarteBancaire TestCarte(string Num)
+        public CarteBancaire TestCarte(long Num)
         {
             CarteBancaire Carte = null;
             foreach (CarteBancaire Car in Cartes)
@@ -277,16 +314,23 @@ namespace Gestion_Systéme_bancaire
                     bool statut = EffectuerTransaction(t);
                     if (statut)
                     {
-                        sortie.WriteLine($"{(t.NumeroTransaction)};OK");
+                        t.Status = "OK";
+                        //sortie.WriteLine($"{(t.NumeroTransaction)};OK");
                        
                     }
                     else
                     {
-                        sortie.WriteLine($"{(t.NumeroTransaction)};KO");
+                        t.Status = "KO";
+                        //sortie.WriteLine($"{(t.NumeroTransaction)};KO");
                     }
+
+                    sortie.WriteLine($"{(t.NumeroTransaction)}; {t.Status}");
                 }
-                              
+
+                
+
             }
+
 
             Console.WriteLine("C'est bien fait!");
         }

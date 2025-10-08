@@ -10,12 +10,12 @@ namespace Gestion_Systéme_bancaire
 {
     public class CarteBancaire
     {
-        public string NumeroCarte { get; set; }
+        public long NumeroCarte { get; set; }
         public List<CompteBancaire> ComptesAssocies { get; set; }
         public List<Transaction> Historique { get; set; }
         public decimal Plafond { get; set; } = 500;
 
-        public CarteBancaire(string num, decimal plaf)
+        public CarteBancaire(long num, decimal plaf)
         {
             NumeroCarte = num;
             Plafond = plaf;
