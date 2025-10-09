@@ -14,15 +14,7 @@ namespace Or.Pages
     /// Logique d'interaction pour Retrait.xaml
     /// </summary>
     
-    public enum code
-    {
-        PlafDepasse = 0,
-        MontantInv = 1,
-        SoldeInsuf = 2,
-        VirInterdit = 3
-
-
-    }
+   
     public partial class Retrait : PageFunction<long>
     {
         Carte CartePorteur { get; set; }
@@ -56,17 +48,25 @@ namespace Or.Pages
                 //Compte fictif pour permettre la transaction
                 Compte compteBanque = new Compte(0, 0, TypeCompte.Courant, 0);
                 Transaction t = new Transaction(0, DateTime.Now, montant, ComptePorteur.Id, compteBanque.Id);
-
-                if (CartePorteur.EstRetraitAutoriseNiveauCarte(t, compteBanque, ComptePorteur) && ComptePorteur.EstRetraitValide(t))
+                CodeResultat code1 = CartePorteur.EstRetraitAutoriseNiveauCarte(t, compteBanque, ComptePorteur);
+                CodeResultat code2 = ComptePorteur.EstRetraitValide(t);
+                if(code1 != CodeResultat.OK && code2 == CodeResultat.OK)
+                //if (CartePorteur.EstRetraitAutoriseNiveauCarte(t, compteBanque, ComptePorteur) && ComptePorteur.EstRetraitValide(t))
                 {
+                    MessageBox.Show(Tools.Label(code1));
+                }
+                if(code2 != CodeResultat.OK && code1 == CodeResultat.OK)
+                {
+                    MessageBox.Show(Tools.Label(code2));
+                }
+                if(code1 == CodeResultat.OK && code2 == CodeResultat.OK){
+
                     SqlRequests.EffectuerModificationOperationSimple(t, CartePorteur.Id);
 
                     OnReturn(null);
                 }
-                else
-                {
-                    MessageBox.Show("Opération de retrait non authorisée");
-                }
+               
+              
             }
             else
             {

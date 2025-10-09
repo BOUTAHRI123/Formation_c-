@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Or.Business;
 
 namespace Or.Models
 {
@@ -24,16 +25,13 @@ namespace Or.Models
         /// </summary>
         /// <param name="transaction"></param>
         /// <returns>Statut du dépôt</returns>
-        public bool EstDepotValide(Transaction transaction)
+        public CodeResultat EstDepotValide(Transaction transaction)
         {
-            if (transaction.Montant > 0)
+            if (transaction.Montant <= 0)
             {
-                return true;
+                return CodeResultat.MontantInvalide;
             }
-            else
-            {
-                return false;
-            }
+            return CodeResultat.OK;
         }
 
         /// <summary>
@@ -41,20 +39,45 @@ namespace Or.Models
         /// </summary>
         /// <param name="transaction"></param>
         /// <returns>Statut du retrait</returns>
-        public bool EstRetraitValide(Transaction transaction)
+        public CodeResultat EstRetraitValide(Transaction transaction)
         {
-            if (EstRetraitAutorise(transaction.Montant))
+            //if (!EstRetraitAutorise(transaction.Montant))
+            //switch (EstRetraitAutorise(transaction.Montant))
+            if(!EstRetraitAutorise(transaction.Montant))
             {
-                return true;
+                //case CodeResultat.SoldeInsuffisant:
+                if(Solde < transaction.Montant)
+                {
+                    return CodeResultat.SoldeInsuffisant;
+
+                }
+                else
+                {
+                    return CodeResultat.MontantInvalide;
+                }
+                
+                //case CodeResultat.MontantInvalide:
+                    //return CodeResultat.MontantInvalide;
+
+                //default:
+                
             }
-            else
-            {
-                return false;
-            }
+
+            return CodeResultat.OK;
         }
 
         private bool EstRetraitAutorise(decimal montant)
         {
+            /*if(Solde < montant)
+            {
+                return CodeResultat.SoldeInsuffisant;
+            }
+            if(montant <= 0)
+            {
+                return CodeResultat.MontantInvalide;
+            }
+            return CodeResultat.OK;*/
+
             return Solde >= montant && montant > 0;
         }
 

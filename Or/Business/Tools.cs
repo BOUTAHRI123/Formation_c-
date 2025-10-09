@@ -19,6 +19,15 @@ namespace Or.Business
         InterCompte = 2
     }
 
+    public enum CodeResultat
+    {
+        OK ,
+        MontantInvalide ,
+        SoldeInsuffisant ,
+        PlafondDepasse ,
+        CompteInexistant ,
+        VirementInterdit 
+    }
     public static class Tools
     {
         public static DateTime ConversionDate(string horodatage)
@@ -72,7 +81,7 @@ namespace Or.Business
         {
             switch ((int)op)
             {
-               
+
                 case 0:
                     return "Dépot";
 
@@ -84,10 +93,39 @@ namespace Or.Business
 
                 default:
                     return "Pas de Type";
-                   
+
             }
 
-          
+
+        }
+
+        public static string Label(CodeResultat code)
+        {
+            switch (code)
+            {
+                case CodeResultat.OK:
+                    return "Affiche rien";
+
+                case CodeResultat.MontantInvalide:
+                    return "Montant invalide";
+
+                case CodeResultat.SoldeInsuffisant:
+                    return "Solde insuffisant";
+
+                case CodeResultat.PlafondDepasse:
+                    return "Plafond dépassé";
+
+                case CodeResultat.VirementInterdit:
+                    return "Virement interdit entre ces comptes";
+
+                case CodeResultat.CompteInexistant:
+                    return "Compte inexistant";
+
+                default:
+                    return "Erreur";
+
+
+            }
         }
     }
 }

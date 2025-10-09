@@ -39,8 +39,8 @@ namespace Or.Pages
                 Compte de = Destinataire.SelectedItem as Compte;
 
                 Transaction t = new Transaction(0, DateTime.Now, montant,  compteBanque.Id, de.Id);
-
-                if (de.EstDepotValide(t))
+                CodeResultat C1 = de.EstDepotValide(t);
+                if (C1 == CodeResultat.OK)
                 {
                     SqlRequests.EffectuerModificationOperationSimple(t, de.IdentifiantCarte);
 
@@ -48,7 +48,7 @@ namespace Or.Pages
                 }
                 else
                 {
-                    MessageBox.Show("Opération refusée");
+                    MessageBox.Show(Tools.Label(C1));
                 }
             }
             else

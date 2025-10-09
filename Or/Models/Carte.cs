@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Or.Business;
 
 namespace Or.Models
 {
@@ -46,9 +47,26 @@ namespace Or.Models
         /// <param name="Expediteur"></param>
         /// <param name="Destinataire"></param>
         /// <returns></returns>
-        public bool EstRetraitAutoriseNiveauCarte(Transaction transaction, Compte Expediteur, Compte Destinataire)
+        public CodeResultat EstRetraitAutoriseNiveauCarte(Transaction transaction, Compte Expediteur, Compte Destinataire)
         {
-            return EstOperationAutoriseeContraintesComptes(Expediteur, Destinataire) && EstEligibleMaximumRetraitHebdomadaire(transaction.Montant, transaction.Horodatage);
+            //CodeResultat C = EstOperationAutoriseeContraintesComptes(Expediteur, Destinataire);
+            if (transaction.Montant <= 0)
+            {
+                return CodeResultat.MontantInvalide;
+            }
+            //if (C == CodeResultat.VirementInterdit)
+            if (!EstOperationAutoriseeContraintesComptes(Expediteur, Destinataire))
+            {
+                return CodeResultat.VirementInterdit;
+            }
+            bool plafondOK = EstEligibleMaximumRetraitHebdomadaire(transaction.Montant, transaction.Horodatage);
+            if (!plafondOK)
+            {
+                return CodeResultat.PlafondDepasse;
+            }
+            return CodeResultat.OK;   
+
+            // return EstOperationAutoriseeContraintesComptes(Expediteur, Destinataire) && EstEligibleMaximumRetraitHebdomadaire(transaction.Montant, transaction.Horodatage);
         }
 
         /// <summary>
@@ -85,10 +103,12 @@ namespace Or.Models
                 return true;
             }
             // Opération externe
-            else
-            {
+            //else if(!EstOperationExterneAutorise(Expediteur, Destinataire))
+            //{
+                //return CodeResultat.VirementInterdit;
                 return EstOperationExterneAutorise(Expediteur, Destinataire);
-            }
+            //}
+            
         }
 
         /// <summary>
@@ -153,11 +173,11 @@ namespace Or.Models
 
         public decimal SoldeCarteActuel(DateTime date)
         {
-            decimal Pactuel = 0;
+            decimal Plactuel = 0;
             //CartePorteur = SqlRequests.InfosCarte(numCarte);
-            Pactuel = Plafond - TotalTran(date);
+            Plactuel = Plafond - TotalTran(date);
 
-            return Pactuel;
+            return Plactuel;
         }
 
     }
