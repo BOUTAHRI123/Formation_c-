@@ -70,6 +70,12 @@ namespace Or.Pages
                 gridView.Columns[3].Width = totalWidth * 0.30; // 20%
             }
         }
+        private void Exportfichier(object sender, RoutedEventArgs e)
+        {
+            string nomfichier = "fichierExport";
+            GestionExportCompte G = new GestionExportCompte();
+            G.SerialiserComptesTransaction(long.Parse(Numero.Text), nomfichier);
+        }
 
     }
 }
