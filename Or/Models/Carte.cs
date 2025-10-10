@@ -59,7 +59,7 @@ namespace Or.Models
             {
                 return CodeResultat.VirementInterdit;
             }
-            bool plafondOK = EstEligibleMaximumRetraitHebdomadaire(transaction.Montant, transaction.Horodatage.Value);
+            bool plafondOK = EstEligibleMaximumRetraitHebdomadaire(transaction.Montant, transaction.Horodatage);
             if (!plafondOK)
             {
                 return CodeResultat.PlafondDepasse;
@@ -159,7 +159,7 @@ namespace Or.Models
             foreach (Transaction t in Historique)
             {
 
-                TimeSpan diff = Date - t.Horodatage.Value;
+                TimeSpan diff = Date - t.Horodatage;
                 //if (t.CompteDestination == 0 && Date.AddDays(-10) >= t.Date )
                 if (t.Destinataire == 0 && diff.TotalDays <= 10)
                 {

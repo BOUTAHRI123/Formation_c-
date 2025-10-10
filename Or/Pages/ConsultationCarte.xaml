@@ -102,7 +102,8 @@
             <Button Content="Effectuer un Dépôt"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoDepot" />
             <Button Content="Effectuer un Virement"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoVirement" />
         </StackPanel>
-        <Button Content="Effectuer un Retrait" Margin="0,40,20,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoRetrait" Grid.RowSpan="2"/>
+
+        <Button Content="Exporter Transactions" Grid.Row="2" Grid.Column="2" Margin="0,0,52,37.6" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Click="Exportfichier"  />
 
     </Grid>
 </PageFunction>

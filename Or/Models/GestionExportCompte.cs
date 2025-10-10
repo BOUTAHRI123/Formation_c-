@@ -27,20 +27,25 @@ namespace Or.Models
                     ListeTransactions = new List<ExportCompteTransacctions>()
                 };
                 Carte carte = SqlRequests.InfosCarte(Id);
-                List<Transaction> Transactions = carte.Historique;
+                List<Transaction> Transactions = SqlRequests.ListeTransactionsAssociesCarte(Id);
                 foreach(Transaction t in Transactions)
                 {
-                    ExportCompteTransacctions transac = new ExportCompteTransacctions
+                    TimeSpan diff = DateTime.Now - t.Horodatage;
+                    if(diff.TotalDays <= 10)
                     {
-                        IdTransaction = t.IdTransaction,
-                        Horodatage = t.Horodatage.Value,
-                        Montant = t.Montant,
-                        TypeTransaction = t.TypeTransaction,
-                        Expediteur = t.Expediteur,
-                        Destinataire = t.Destinataire
-                    };
-                    compte.ListeTransactions.Add(transac);
-                    
+                        ExportCompteTransacctions transac = new ExportCompteTransacctions
+                        {
+
+                            IdTransaction = t.IdTransaction,
+                            Horodatage = t.Horodatage,
+                            Montant = t.Montant,
+                            TypeTransaction = t.TypeTransaction,
+                            Expediteur = t.Expediteur,
+                            Destinataire = t.Destinataire
+                        };
+                        compte.ListeTransactions.Add(transac);
+                    }
+                  
                 }
                 ExportComptes.Add(compte);
             }

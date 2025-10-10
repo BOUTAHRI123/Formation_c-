@@ -21,8 +21,13 @@ namespace Or.Models
         public string Solde { get; set; }
 
         [XmlArray("ListeTransactions")]
-        [XmlArrayItem("Transaction", typeof(Transaction))]
+        [XmlArrayItem("Transaction", typeof(ExportCompteTransacctions))]
         public List<ExportCompteTransacctions> ListeTransactions { get; set; }
+
+        public ExportCompte()
+        {
+
+        }
 
     }
 }

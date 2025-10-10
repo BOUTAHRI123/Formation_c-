@@ -72,7 +72,7 @@ namespace Or.Pages
         }
         private void Exportfichier(object sender, RoutedEventArgs e)
         {
-            string nomfichier = "fichierExport";
+            string nomfichier = "fichierExport.xml";
             GestionExportCompte G = new GestionExportCompte();
             G.SerialiserComptesTransaction(long.Parse(Numero.Text), nomfichier);
         }

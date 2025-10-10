@@ -431,7 +431,7 @@ namespace Or.Business
             var insertTransac = connection.CreateCommand();
             insertTransac.CommandText = queryInsertTransac;
 
-            insertTransac.Parameters.AddWithValue("@Horodatage", trans.Horodatage.Value.ToString("dd/MM/yyyy hh:mm:ss"));
+            insertTransac.Parameters.AddWithValue("@Horodatage", trans.Horodatage.ToString("dd/MM/yyyy hh:mm:ss"));
             insertTransac.Parameters.AddWithValue("@Montant", trans.Montant);
             insertTransac.Parameters.AddWithValue("@CptExp", trans.Expediteur);
             insertTransac.Parameters.AddWithValue("@CptDest", trans.Destinataire);
