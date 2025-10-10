@@ -19,6 +19,7 @@ namespace Or.Business
         static readonly string queryComptesDispo = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE NOT IdtCpt=@IdtCpt";
 
         static readonly string queryComptesCarte = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE NumCarte=@Carte";
+        static readonly string queryComptesBenef = "SELECT IDBENEFICIAIRE,NomClient,PrenomClient,idtCpt FROM BENEFICIAIRE B INNER JOIN  COMPTE CP INNER JOIN  CARTE C WHERE B.IDCARTE=C.NumCarte AND B.IDCOMPTE = CP.idtCpt AND NumCarte=@Carte";
         static readonly string queryTransacCompte = "SELECT IdtTransaction, Horodatage, Montant, CptExpediteur, CptDestinataire, Statut FROM \"TRANSACTION\" WHERE Statut = 'O' AND (CptExpediteur=@IdtCptEx OR CptDestinataire=@IdtCptDest)";
         static readonly string queryCarte = "SELECT NumCarte, PrenomClient, NomClient, PlafondRetrait from CARTE WHERE NumCarte=@Carte";
         static readonly string queryTransacCarte = "SELECT tr.IdtTransaction, tr.Horodatage, tr.Montant, tr.CptExpediteur, tr.CptDestinataire, tr.Statut FROM \"TRANSACTION\" tr INNER JOIN HISTTRANSACTION t ON t.IdtTransaction = tr.IdtTransaction WHERE tr.Statut = 'O' AND t.NumCarte=@Carte;";
@@ -469,7 +470,43 @@ namespace Or.Business
             return updateCompte;
         }
 
-        
+        public static List<Beneficiaire> ListeBeneficiairesAssocieClient(long numCarte)
+        {
+            List<Beneficiaire> Benificiaires = new List<Beneficiaire>();
+            string connectionString = ConstructionConnexionString(fileDb);
+
+            using(var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new SqliteCommand(queryComptesBenef, connection))
+                {
+                    command.Parameters.AddWithValue("@Carte", numCarte);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        
+                        string nom;
+                        string prenom;
+                        int idcompte;
+
+                        while (reader.Read())
+                        {
+                            
+                            nom = reader.GetString(0);
+                            prenom = reader.GetString(1);
+                            idcompte = reader.GetInt32(0);
+
+
+                        }
+                    }
+
+
+                }
+                
+            }
+
+            return Benificiaires;
+
+        }
 
     }
 }

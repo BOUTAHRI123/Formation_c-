@@ -76,6 +76,10 @@ namespace Or.Pages
             GestionExportCompte G = new GestionExportCompte();
             G.SerialiserComptesTransaction(long.Parse(Numero.Text), nomfichier);
         }
+        private void GoListeBeneficiaires_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new ListeBeneficiaire(long.Parse(Numero.Text)));
+        }
 
     }
 }

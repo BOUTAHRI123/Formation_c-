@@ -92,6 +92,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\ListeBeneficiaire.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Retrait.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -106,6 +110,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Beneficiaire.cs" />
     <Compile Include="Models\GestionExportCompte.cs" />
     <Compile Include="Models\ExportCompteTransactions.cs" />
     <Compile Include="Models\ExportCompte.cs" />
@@ -126,6 +131,9 @@
     </Compile>
     <Compile Include="Pages\HistoriqueTransactions.xaml.cs">
       <DependentUpon>HistoriqueTransactions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ListeBeneficiaire.xaml.cs">
+      <DependentUpon>ListeBeneficiaire.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Retrait.xaml.cs">
       <DependentUpon>Retrait.xaml</DependentUpon>
