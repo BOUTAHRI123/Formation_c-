@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Globalization;
 
 namespace Gestion_Systéme_bancaire
 {
@@ -21,13 +16,14 @@ namespace Gestion_Systéme_bancaire
             Plafond = plaf;
         }
        
-        public decimal TotalTran(DateTime Date)
+        // Plutôt privée si tu l'utilises que dans PeutEffectuer
+        private decimal TotalTran(DateTime Date)
         {
             decimal Totale = 0;
             foreach(Transaction t in Historique)
             {
                 TimeSpan diff = Date - t.Date ;
-                //if (t.CompteDestination == 0 && Date.AddDays(-10) >= t.Date )
+                // les virements sont aussi à prendre en compte, pas juste les retraits
                 if (t.CompteDestination == 0 && diff.TotalDays <= 10)
                 {
                     Totale += t.Montant;
@@ -41,10 +37,12 @@ namespace Gestion_Systéme_bancaire
         public bool PeutEffectuer(decimal montant, DateTime date)
         {
             decimal total = TotalTran(date);
-            if ((total + montant) <= Plafond)
+            /*if ((total + montant) <= Plafond)
                 return true;
             else
-                return false;
+                return false;*/
+            return (total + montant) <= Plafond;
+
         }
 
 
