@@ -26,7 +26,8 @@ namespace Or.Business
         SoldeInsuffisant ,
         PlafondDepasse ,
         CompteInexistant ,
-        VirementInterdit 
+        VirementInterdit
+        
     }
     public static class Tools
     {

@@ -1,6 +1,7 @@
 ﻿using Or.Business;
 using Or.Models;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
@@ -21,6 +22,7 @@ namespace Or.Pages
 
         Carte CartePorteur { get; set; }
         Compte ComptePorteur { get; set; }
+       
         public Virement(long numCarte)
         {
             InitializeComponent();
@@ -31,17 +33,65 @@ namespace Or.Pages
             CartePorteur.AlimenterHistoriqueEtListeComptes(SqlRequests.ListeTransactionsAssociesCarte(numCarte), SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id).Select(x=>x.Id).ToList());
             ComptePorteur = SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id).Find(x => x.TypeDuCompte == TypeCompte.Courant);
 
+            
             var viewExpediteur = CollectionViewSource.GetDefaultView(SqlRequests.ListeComptesAssociesCarte(numCarte));
             viewExpediteur.GroupDescriptions.Add(new PropertyGroupDescription("TypeDuCompte"));
             viewExpediteur.SortDescriptions.Add(new SortDescription("TypeDuCompte", ListSortDirection.Ascending));
             viewExpediteur.SortDescriptions.Add(new SortDescription("IdentifiantCarte", ListSortDirection.Ascending));
             Expediteur.ItemsSource = viewExpediteur;
 
-            var viewDestinataire = CollectionViewSource.GetDefaultView(SqlRequests.ListeComptesDispo(ComptePorteur.Id));
-            viewDestinataire.GroupDescriptions.Add(new PropertyGroupDescription("IdentifiantCarte"));
-            viewDestinataire.SortDescriptions.Add(new SortDescription("IdentifiantCarte", ListSortDirection.Ascending));
-            viewDestinataire.SortDescriptions.Add(new SortDescription("TypeDuCompte", ListSortDirection.Ascending));
-            Destinataire.ItemsSource = viewDestinataire;
+            ListeDestinataires();
+
+   
+        }
+
+        private void Expediteur_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListeDestinataires();
+
+        }
+        private void ListeDestinataires()
+        {
+            try
+            {
+                List<Compte> listeDestinataires = new List<Compte>();
+
+                // Ajouter les bénéficiaires enregistrés
+                var benefs = SqlRequests.ListeBeneficiairesAssocieClient(CartePorteur.Id);
+                if (benefs != null && benefs.Count > 0)
+                {
+                    var comptesBenef = benefs.Select(b => SqlRequests.ObtenirCompteParId(b.IdCompte))
+                    .Where(c => c != null)
+                    .ToList();
+                    listeDestinataires.AddRange(comptesBenef);
+                }
+
+                // Ajouter le compte Livret de la même carte (même si pas bénéficiaire)
+                var comptesCarte = SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id);
+                var compteLivret = comptesCarte.FirstOrDefault(c => c.TypeDuCompte == TypeCompte.Livret);
+                if (compteLivret != null)
+                {
+                    // On ne le rajoute que s'il n'existe pas déjà dans la liste
+                    if (!listeDestinataires.Any(c => c.Id == compteLivret.Id))
+                    {
+                        listeDestinataires.Add(compteLivret);
+                    }
+                }
+
+                // Exclure le compte sélectionné comme expéditeur
+                if (Expediteur.SelectedItem is Compte ex)
+                {
+                    listeDestinataires = listeDestinataires.Where(c => c.Id != ex.Id).ToList();
+
+                }
+
+                // Affecter à la liste Destinataire
+                Destinataire.ItemsSource = listeDestinataires;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur lors du chargement des destinataires : " + ex.Message);
+            }
         }
 
         private void Retour_Click(object sender, RoutedEventArgs e)
@@ -85,13 +135,10 @@ namespace Or.Pages
 
         }
 
-        private void Expediteur_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void BtnAjouter_Click(object sender, RoutedEventArgs e)
         {
-            var viewDestinataire = CollectionViewSource.GetDefaultView(SqlRequests.ListeComptesDispo((Expediteur.SelectedItem as Compte).Id));
-            viewDestinataire.GroupDescriptions.Add(new PropertyGroupDescription("IdentifiantCarte"));
-            viewDestinataire.SortDescriptions.Add(new SortDescription("IdentifiantCarte", ListSortDirection.Descending));
-            viewDestinataire.SortDescriptions.Add(new SortDescription("TypeDuCompte", ListSortDirection.Ascending));
-            Destinataire.ItemsSource = viewDestinataire;
+            AjouterBeneficiaire pageAjout = new AjouterBeneficiaire(CartePorteur.Id);
+            this.NavigationService.Navigate(pageAjout);
         }
     }
 }

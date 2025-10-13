@@ -9,7 +9,7 @@
       xmlns:ec="clr-namespace:Or.Business"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Liste des bénéficiaires">
+      Title="Liste des bénéficiaires" KeepAlive="True">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -35,7 +35,7 @@
         </StackPanel>
 
         <ListView x:Name="listbeneficiaire" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2" SizeChanged="ListView_SizeChanged">
-  
+
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -48,9 +48,9 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <TextBlock Text="{Binding IdTransaction}"
-                           Style="{StaticResource TextColumnStyle}"
-                           TextAlignment="Center" />
+                                    <TextBlock Text= "{Binding Nom}"
+                                      Style="{StaticResource TextColumnStyle}"
+                                      TextAlignment="Center" />
                                 </Grid>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -61,7 +61,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <TextBlock Text="{Binding TypeTransaction}"
+                                    <TextBlock Text="{Binding Prenom}"
                                         Style="{StaticResource TextColumnStyle}"
                                         TextAlignment="Center" />
                                 </Grid>
@@ -74,7 +74,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <TextBlock Text="{Binding Horodatage, StringFormat='dd/MM/yyyy hh:mm:ss'}"
+                                    <TextBlock Text="{Binding IdCompte}"
                                        Style="{StaticResource TextColumnStyle}"
                                        TextAlignment="Center" />
                                 </Grid>
@@ -98,5 +98,6 @@
         <StackPanel Margin="10" Orientation="Vertical" Grid.Row="2" Grid.Column="0" >
             <Button x:Name="Retour" Content="Retour" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="Retour_Click" Margin="000,0,0,8"/>
         </StackPanel>
+        <Button Content="Ajouter bénéficiaire" Grid.Row="1" Grid.Column="2" Margin="0,0,81,5" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Click="BtnAjouter_Click" />
     </Grid>
 </PageFunction>

@@ -76,6 +76,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\AjouterBeneficiaire.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\ConsultationCarte.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -120,6 +124,9 @@
       <DependentUpon>Accueil.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Carte.cs" />
+    <Compile Include="Pages\AjouterBeneficiaire.xaml.cs">
+      <DependentUpon>AjouterBeneficiaire.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ConsultationCarte.xaml.cs">
       <DependentUpon>ConsultationCarte.xaml</DependentUpon>
     </Compile>

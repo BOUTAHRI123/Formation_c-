@@ -104,7 +104,7 @@
             <Button Content="Liste des Bénéficiaires"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoListeBeneficiaires_Click" />
         </StackPanel>
         
-        <Button Content="Exporter Transactions" Grid.Row="2" Grid.Column="2" Margin="0,0,52,37.6" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Click="Exportfichier" />
+        <Button Content="Exporter Transactions" Grid.Row="2" Grid.Column="2" Margin="0,133,84,0" HorizontalAlignment="Right" VerticalAlignment="Top"  Click="Exportfichier" />
 
     </Grid>
 </PageFunction>

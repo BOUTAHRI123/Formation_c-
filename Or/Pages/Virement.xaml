@@ -9,7 +9,7 @@
       xmlns:sysglb="clr-namespace:System.Globalization;assembly=mscorlib"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Virement">
+      Title="Virement" KeepAlive="True">
 
     <Grid>
         <TextBlock x:Name="Titre" HorizontalAlignment="Left" Margin="100,85,0,0" TextWrapping="Wrap" Text="Virement" VerticalAlignment="Top" FontSize="20" FontWeight="SemiBold"/>
@@ -41,7 +41,7 @@
         </ComboBox>
 
         <Label x:Name="labelD" Content="Compte à créditer" HorizontalAlignment="Left" Margin="300,180,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="Destinataire" HorizontalAlignment="Left" Margin="300,210,0,0" VerticalAlignment="Top" Width="120">
+        <ComboBox x:Name="Destinataire" HorizontalAlignment="Left" Margin="300,210,0,0" VerticalAlignment="Top" Width="120" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock>
@@ -71,8 +71,8 @@
         <TextBox x:Name="Montant" HorizontalAlignment="Left" Margin="500,210,0,0" VerticalAlignment="Top" Width="120" Height="22" TextAlignment="Right" TextWrapping="Wrap"/>
 
         <Button x:Name="Retour" Content="Retour" HorizontalAlignment="Left" Margin="100,330,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="Retour_Click"/>
+        <Button Content="Ajouter un bénéficiaire" Margin="272,330,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"  Click="BtnAjouter_Click" />
         <Button x:Name="button" Content="Valider" HorizontalAlignment="Left" Margin="555,330,0,0" VerticalAlignment="Top" Width="80" Height="30" Click="ValiderVirement_Click"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="250,210,0,0" TextWrapping="Wrap" Text="⟹" VerticalAlignment="Top" Height="22" Width="20"/>
-
+       
     </Grid>
 </PageFunction>
