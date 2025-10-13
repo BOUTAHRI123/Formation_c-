@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-
-namespace Gestion_Systéme_bancaire
+﻿namespace Gestion_Systéme_bancaire
 {
     public class CompteBancaire
     {
         public int Identifiant { get; set; }
+        // Bonne idée de ne pas autoriser la modification de Solde
         public decimal Solde { get; private set; }
         public string TypeCompte { get; set; }
         public long NumeroCarte { get; set; } // lié à la carte
@@ -22,13 +16,13 @@ namespace Gestion_Systéme_bancaire
             NumeroCarte = numero;
         }
         
+        // Méthodes OK
         public bool DepotArgent(decimal Montant)
         {
             bool Statut = true;
             if(Montant > 0)
             {
                 Solde += Montant;
-
             }
             else
             {
@@ -42,7 +36,6 @@ namespace Gestion_Systéme_bancaire
             if (Montant > 0 && Solde >= Montant)
             {
                 Solde -= Montant;
-
             }
             else
             {
@@ -50,9 +43,5 @@ namespace Gestion_Systéme_bancaire
             }
             return Statut;
         }
-
-
     }
-
-
 }

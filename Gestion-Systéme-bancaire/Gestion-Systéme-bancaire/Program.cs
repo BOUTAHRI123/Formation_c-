@@ -15,8 +15,8 @@ namespace Gestion_Systéme_bancaire
             string fichierTransaction = @"C:\Users\Formation\Desktop\formation_c#\FormationCSharp\Gestion-Systéme-bancaire\Gestion-Systéme-bancaire\\Transactions.csv";
             string fichierSortie = @"C:\Users\Formation\Desktop\formation_c#\FormationCSharp\Gestion-Systéme-bancaire\Gestion-Systéme-bancaire\\Sortieresultat.csv";
             Banque Banque = new Banque();
-            Banque.Cartes = Banque.lireCarte(fichierCarte);
-            Banque.Comptes = Banque.lireCompte(fichierCompte);
+            Banque.Cartes = Banque.LireCarte(fichierCarte);
+            Banque.Comptes = Banque.LireCompte(fichierCompte);
             Banque.Transactions = Banque.LireTransaction(fichierTransaction);
            
             
