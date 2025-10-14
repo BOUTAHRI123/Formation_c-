@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Or.Business;
@@ -80,6 +82,59 @@ namespace Or.Pages
         {
             NavigationService.Navigate(new ListeBeneficiaire(long.Parse(Numero.Text)));
         }
+        // Fonction du bouton Importer Transactions 
+        private void BtnImporterTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            
+            // Si l'utilisateur n'a pas saisi de fichier
+            if (string.IsNullOrWhiteSpace(TxtFichierImport.Text))
+            {
+                MessageBox.Show("Veuillez indiquer le chemin du fichier à importer.");
+                return;
+            }
+
+            string fichierImport = TxtFichierImport.Text.Trim();
+
+            // Vérification d'existence du fichier
+            if (!File.Exists(fichierImport))
+            {
+                MessageBox.Show("Fichier introuvable !");
+                return;
+            }
+            // Création de la liste des exportComptes afin de stocker les comptes importer 
+            List<ExportCompte> ComptesImport = new List<ExportCompte>();
+            GestionImportCompte import = new GestionImportCompte();
+            // implimenter la liste des Comptes avec la liste return par la Fonction 
+            ComptesImport = import.DeSerialiserTransactions(fichierImport);
+            List<Transaction> Transaction = new List<Transaction>();
+
+            foreach(ExportCompte C in ComptesImport)
+            {
+                if(C.ListeTransactions != null)
+                {
+                    foreach(var t in C.ListeTransactions)
+                    {
+                        Transaction trans = new Transaction(
+                        t.IdTransaction,
+                        t.Horodatage.Value,
+                        t.Montant,
+                        t.Expediteur,
+                        t.Destinataire
+                        );
+                        Transaction.Add(trans);
+                    }
+                }
+                import.TransactionsImportees(Transaction);
+            }
+        
+            if(ComptesImport.Count != 0)
+            {
+                MessageBox.Show("Importation des transactions réussie !");
+            }
+            
+          
+        }
+
 
     }
 }

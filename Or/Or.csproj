@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Beneficiaire.cs" />
+    <Compile Include="Models\GestionImportCompte.cs" />
     <Compile Include="Models\GestionExportCompte.cs" />
     <Compile Include="Models\ExportCompteTransactions.cs" />
     <Compile Include="Models\ExportCompte.cs" />
