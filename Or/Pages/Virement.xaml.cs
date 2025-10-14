@@ -100,9 +100,7 @@ namespace Or.Pages
                     }
 
                     // Exclure toujours le compte expéditeur lui-même
-                    listeDestinataires = listeDestinataires
-                    .Where(c => c.Id != ex.Id)
-                    .ToList();
+                    listeDestinataires = listeDestinataires.Where(c => c.Id != ex.Id).ToList();
 
                     // Affecter la liste des destinataires à la ComboBox
                     Destinataire.ItemsSource = listeDestinataires;
