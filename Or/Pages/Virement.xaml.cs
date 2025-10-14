@@ -56,42 +56,68 @@ namespace Or.Pages
             {
                 List<Compte> listeDestinataires = new List<Compte>();
 
-                // Ajouter les bénéficiaires enregistrés
-                var benefs = SqlRequests.ListeBeneficiairesAssocieClient(CartePorteur.Id);
-                if (benefs != null && benefs.Count > 0)
-                {
-                    var comptesBenef = benefs.Select(b => SqlRequests.ObtenirCompteParId(b.IdCompte))
-                    .Where(c => c != null)
-                    .ToList();
-                    listeDestinataires.AddRange(comptesBenef);
-                }
-
-                // Ajouter le compte Livret de la même carte (même si pas bénéficiaire)
-                var comptesCarte = SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id);
-                var compteLivret = comptesCarte.FirstOrDefault(c => c.TypeDuCompte == TypeCompte.Livret);
-                if (compteLivret != null)
-                {
-                    // On ne le rajoute que s'il n'existe pas déjà dans la liste
-                    if (!listeDestinataires.Any(c => c.Id == compteLivret.Id))
-                    {
-                        listeDestinataires.Add(compteLivret);
-                    }
-                }
-
-                // Exclure le compte sélectionné comme expéditeur
                 if (Expediteur.SelectedItem is Compte ex)
                 {
-                    listeDestinataires = listeDestinataires.Where(c => c.Id != ex.Id).ToList();
+                    // Si l'expéditeur est un compte Livret
+                    if (ex.TypeDuCompte == TypeCompte.Livret)
+                    {
+                        // On ne peut faire un virement que vers le compte Courant de la même carte
+                        var comptesCarte = SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id);
+                        var compteCourant = comptesCarte.FirstOrDefault(c => c.TypeDuCompte == TypeCompte.Courant);
 
+                        if (compteCourant != null && compteCourant.Id != ex.Id)
+                        {
+                            listeDestinataires.Add(compteCourant);
+                        }
+                    }
+                    else
+                    {
+                        /*Si l'expéditeur est un compte Courant
+                         On peut faire un virement vers :les bénéficiaires enregistrésle compte Livret de la même carte*/
+
+                        // Ajouter les bénéficiaires de la carte
+                        var benefs = SqlRequests.ListeBeneficiairesAssocieClient(CartePorteur.Id);
+                        if (benefs != null && benefs.Count > 0)
+                        {
+                            var comptesBenef = benefs
+                            .Select(b => SqlRequests.ObtenirCompteParId(b.IdCompte))
+                            .Where(c => c != null)
+                            .ToList();
+                            listeDestinataires.AddRange(comptesBenef);
+                        }
+
+                        // Ajouter le compte Livret de la même carte
+                        var comptesCarte = SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id);
+                        var compteLivret = comptesCarte.FirstOrDefault(c => c.TypeDuCompte == TypeCompte.Livret);
+                        if (compteLivret != null && compteLivret.Id != ex.Id)
+                        {
+                            // On ne le rajoute que s'il n'est pas déjà dans la liste
+                            if (!listeDestinataires.Any(c => c.Id == compteLivret.Id))
+                            {
+                                listeDestinataires.Add(compteLivret);
+                            }
+                        }
+                    }
+
+                    // Exclure toujours le compte expéditeur lui-même
+                    listeDestinataires = listeDestinataires
+                    .Where(c => c.Id != ex.Id)
+                    .ToList();
+
+                    // Affecter la liste des destinataires à la ComboBox
+                    Destinataire.ItemsSource = listeDestinataires;
                 }
-
-                // Affecter à la liste Destinataire
-                Destinataire.ItemsSource = listeDestinataires;
+                else
+                {
+                    // Si aucun expéditeur n'est encore sélectionné
+                    Destinataire.ItemsSource = null;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Erreur lors du chargement des destinataires : " + ex.Message);
             }
+            
         }
 
         private void Retour_Click(object sender, RoutedEventArgs e)

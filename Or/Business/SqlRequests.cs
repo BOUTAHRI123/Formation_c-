@@ -473,7 +473,8 @@ namespace Or.Business
 
             return updateCompte;
         }
-
+        
+        // Récupérer la liste des bénéficiaires associé à ma carte 
         public static List<Beneficiaire> ListeBeneficiairesAssocieClient(long numCarte)
         {
             List<Beneficiaire> Beneficiaires = new List<Beneficiaire>();
@@ -512,6 +513,7 @@ namespace Or.Business
             return Beneficiaires;
 
         }
+        // Ajouter un bénéficiaire 
         public static void AjouterBeneficiaire(long idCarte, int idCompte)
         {
             string connectionString = ConstructionConnexionString(fileDb);
@@ -544,7 +546,7 @@ namespace Or.Business
                 }
             }
         }
-
+        // Supprimer le bénéficiaire lié à l'id
         public static void SupprimerBeneficiaire(int idBenef)
         {
             string connectionString = ConstructionConnexionString(fileDb);
@@ -559,6 +561,7 @@ namespace Or.Business
                 }
             }
         }
+        // trouver le Compte lié à l'idCompte s'il le trouve on return le sinon ça va etre null
         public static Compte ObtenirCompteParId(int idCompte)
         {
             string connectionString = ConstructionConnexionString(fileDb);
@@ -591,6 +594,7 @@ namespace Or.Business
 
             return null;
         }
+        // Vérifier si le Compte à ajouter il est déjà dans la liste des bénéficiaires ou pas 
         public static bool ExisteBeneficiaire(long idCarte, int idCompte)
         {
             string connectionString = ConstructionConnexionString(fileDb);

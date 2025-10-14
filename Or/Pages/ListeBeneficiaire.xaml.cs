@@ -34,7 +34,7 @@ namespace Or.Pages
 
 
         }
-
+        
         private void ChargerInfosCarte()
         {
             CartePorteur = SqlRequests.InfosCarte(CarteId);
@@ -46,17 +46,12 @@ namespace Or.Pages
                 Prenom.Text = CartePorteur.PrenomClient;
             }
         }
+        // Création de la liste des bénéficiaires associé
         public void Donnees()
         {
             Beneficiaires = SqlRequests.ListeBeneficiairesAssocieClient(CarteId);
             listbeneficiaire.ItemsSource = Beneficiaires;
-            //foreach(Beneficiaire B in Beneficiaires)
-            //{
-                //Nom.Text = B.Nom;
-                //Prenom.Text = B.Prenom;
-                //IdCompte.Text = B.IdCompte;
-
-            //}
+          
 
         }
          private void Retour_Click(object sender, RoutedEventArgs e)
@@ -68,6 +63,7 @@ namespace Or.Pages
             AjouterBeneficiaire pageAjout = new AjouterBeneficiaire(CarteId);
             this.NavigationService.Navigate(pageAjout);
         }
+        
         public void BtnSupprimer_Click(object sender, RoutedEventArgs e)
         {
             Beneficiaire benef = (sender as Button).DataContext as Beneficiaire;
@@ -78,8 +74,7 @@ namespace Or.Pages
             }
 
             MessageBoxResult confirm = MessageBox.Show(
-            $"Souhaitez-vous vraiment supprimer le bénéficiaire {benef.Nom} {benef.Prenom} (Compte n° {benef.IdCompte}) ?",
-            "Confirmation de suppression",
+            $"Souhaitez-vous vraiment supprimer le bénéficiaire {benef.Nom} {benef.Prenom} (Compte n° {benef.IdCompte}) ?", "Confirmation de suppression",
             MessageBoxButton.YesNo,
             MessageBoxImage.Warning);
             if (confirm == MessageBoxResult.Yes)
