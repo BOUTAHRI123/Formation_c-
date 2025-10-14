@@ -29,7 +29,7 @@ namespace Or.Business
         static readonly string queryInsertHistTransac = "INSERT INTO HISTTRANSACTION (IdtTransaction,NumCarte) VALUES (@IdtTrans,@Carte)";
 
         static readonly string queryUpdateCompte = "UPDATE COMPTE SET Solde=Solde-@Montant WHERE IdtCpt=@IdtCompte";
-        static readonly string queryComptesBenef = "SELECT IDBENEFICIAIRE,NomClient,PrenomClient,idtCpt FROM BENEFICIAIRE B INNER JOIN  COMPTE CP INNER JOIN  CARTE C WHERE  B.IDCompte = CP.idtCpt AND CP.NumCarte=C.NumCarte ";
+        static readonly string queryComptesBenef = "SELECT B.IDBENEFICIAIRE,C.NomClient,C.PrenomClient,B.IDCOMPTE FROM BENEFICIAIRE B INNER JOIN  COMPTE CP ON B.IDCOMPTE=CP.idtcpt INNER JOIN  CARTE C ON C.NumCarte = CP.NumCarte WHERE  B.IDCARTE=@Carte ";
 
         static readonly string  queryDalateBenef = "DELETE FROM BENEFICIAIRE WHERE IDBENEFICIAIRE = @IdBenef";
 
@@ -487,10 +487,7 @@ namespace Or.Business
                     command.Parameters.AddWithValue("@Carte", numCarte);
                     using (var reader = command.ExecuteReader())
                     {
-                        
-                        string nom;
-                        string prenom;
-                        int idcompte;
+                       
 
                         while (reader.Read())
                         {
@@ -501,7 +498,7 @@ namespace Or.Business
                                 Prenom = reader.GetString(2),
                                 IdCompte = reader.GetInt32(3),
                                 IdCarte = (int)numCarte
-                            };
+                            };                        
                             Beneficiaires.Add(b);
 
                         }
@@ -543,7 +540,7 @@ namespace Or.Business
                 using (var cmdLastId = new SqliteCommand(queryLastId, connection))
                 {
                     long lastId = (long)cmdLastId.ExecuteScalar();
-                    Console.WriteLine($"Bénéficiaire ajouté avec succès (IdBenef = {lastId})");
+                    
                 }
             }
         }

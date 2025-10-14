@@ -43,7 +43,7 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Nom" Width="80">
+                    <GridViewColumn Header="Nom" Width="150">
 
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -69,7 +69,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="N° Compte" Width="200">
+                    <GridViewColumn Header="N° Compte" Width="50">
 
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>

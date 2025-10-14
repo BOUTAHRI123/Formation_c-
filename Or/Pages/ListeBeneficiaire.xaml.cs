@@ -50,6 +50,13 @@ namespace Or.Pages
         {
             Beneficiaires = SqlRequests.ListeBeneficiairesAssocieClient(CarteId);
             listbeneficiaire.ItemsSource = Beneficiaires;
+            //foreach(Beneficiaire B in Beneficiaires)
+            //{
+                //Nom.Text = B.Nom;
+                //Prenom.Text = B.Prenom;
+                //IdCompte.Text = B.IdCompte;
+
+            //}
 
         }
          private void Retour_Click(object sender, RoutedEventArgs e)
@@ -93,14 +100,14 @@ namespace Or.Pages
 
         private void ListView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //GridView gridView = listView.View as GridView;
-            //if (gridView != null)
-            //{
-               // double totalWidth = listView.ActualWidth - SystemParameters.VerticalScrollBarWidth;
-               // gridView.Columns[0].Width = totalWidth * 0.10; // 10%
-               // gridView.Columns[1].Width = totalWidth * 0.45; // 40%
-               // gridView.Columns[2].Width = totalWidth * 0.45; // 20%
-            //}
+            GridView gridView = listbeneficiaire.View as GridView;
+            if (gridView != null)
+            {
+               double totalWidth = listbeneficiaire.ActualWidth - SystemParameters.VerticalScrollBarWidth;
+               gridView.Columns[0].Width = totalWidth * 0.10; // 10%
+               gridView.Columns[1].Width = totalWidth * 0.45; // 40%
+               gridView.Columns[2].Width = totalWidth * 0.45; // 20%
+            }
         }
     }
 }
