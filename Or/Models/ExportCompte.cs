@@ -1,17 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 
 namespace Or.Models
 {
-    [XmlRoot]
+
+    [XmlType("Comptes")]
+    public class ExportComptes
+    {
+        [XmlElement("Compte")]
+        public List<ExportCompte> ListeComptes = new List<ExportCompte>();
+    }
+
+    [XmlType("Compte")]
     public class ExportCompte
     {
-        [XmlElement("ID")]
+        [XmlElement("Identifiant")]
         public int Id  { get; set; }
 
         [XmlElement("Type")]
@@ -20,7 +24,7 @@ namespace Or.Models
         [XmlElement("Solde")]
         public string Solde { get; set; }
 
-        [XmlArray("ListeTransactions")]
+        [XmlArray("Transactions")]
         [XmlArrayItem("Transaction", typeof(ExportCompteTransacctions))]
         public List<ExportCompteTransacctions> ListeTransactions { get; set; }
 

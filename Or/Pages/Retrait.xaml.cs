@@ -33,6 +33,7 @@ namespace Or.Pages
 
             PlafondMaxRetrait.Text = CartePorteur.Plafond.ToString("C2");
             Solde.Text = ComptePorteur.Solde.ToString("C2");
+            // OK - fonctionnement normal
             PlafondActuelRetrait.Text = CartePorteur.SoldeCarteActuel(DateTime.Now).ToString("C2");
         }
 

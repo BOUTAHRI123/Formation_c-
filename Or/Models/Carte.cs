@@ -174,7 +174,6 @@ namespace Or.Models
         public decimal SoldeCarteActuel(DateTime date)
         {
             decimal Plactuel = 0;
-            //CartePorteur = SqlRequests.InfosCarte(numCarte);
             Plactuel = Plafond - TotalTran(date);
 
             return Plactuel;

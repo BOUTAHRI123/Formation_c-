@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Or.Business;
 using System.IO;
 using System.Xml.Serialization;
@@ -15,7 +12,8 @@ namespace Or.Models
         public void SerialiserComptesTransaction(long Id,string fichierExport)
         {
             List<Compte> Comptes = SqlRequests.ListeComptesAssociesCarte(Id);
-            List<ExportCompte> ExportComptes = new List<ExportCompte>();
+            ExportComptes exportComptes = new ExportComptes();
+            exportComptes.ListeComptes = new List<ExportCompte>();
 
             foreach(Compte cpt in Comptes)
             {
@@ -47,12 +45,12 @@ namespace Or.Models
                     }
                   
                 }
-                ExportComptes.Add(compte);
+                exportComptes.ListeComptes.Add(compte);
             }
-            XmlSerializer serializer = new XmlSerializer(typeof(List<ExportCompte>));
+            XmlSerializer serializer = new XmlSerializer(typeof(ExportComptes));
             using (TextWriter writer = new StreamWriter(fichierExport))
             {
-                serializer.Serialize(writer, ExportComptes);
+                serializer.Serialize(writer, exportComptes);
             }
         }
     }
