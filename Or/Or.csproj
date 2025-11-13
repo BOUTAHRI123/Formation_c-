@@ -35,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Numerics" />
@@ -100,6 +101,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Conseille.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\CreerCompte.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Retrait.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -115,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Beneficiaire.cs" />
+    <Compile Include="Models\Conseiller.cs" />
     <Compile Include="Models\GestionImportCompte.cs" />
     <Compile Include="Models\GestionExportCompte.cs" />
     <Compile Include="Models\ExportCompteTransactions.cs" />
@@ -142,6 +152,12 @@
     </Compile>
     <Compile Include="Pages\ListeBeneficiaire.xaml.cs">
       <DependentUpon>ListeBeneficiaire.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Conseille.xaml.cs">
+      <DependentUpon>Conseille.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\CreerCompte.xaml.cs">
+      <DependentUpon>CreerCompte.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Retrait.xaml.cs">
       <DependentUpon>Retrait.xaml</DependentUpon>

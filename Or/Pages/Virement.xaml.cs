@@ -129,28 +129,43 @@ namespace Or.Pages
             {
                 Compte ex = Expediteur.SelectedItem as Compte;
                 Compte de = Destinataire.SelectedItem as Compte;
-
-                Transaction t = new Transaction(0, DateTime.Now, montant, ex.Id, de.Id);
-
-                CodeResultat C1 = (Expediteur.SelectedItem as Compte).EstRetraitValide(t);
-                CodeResultat C2 = CartePorteur.EstRetraitAutoriseNiveauCarte(t, ex, de);
-                if (C1 == CodeResultat.OK && C2 == CodeResultat.OK)
+                if (ex != null)
                 {
-                    SqlRequests.EffectuerModificationOperationInterCompte(t, ex.IdentifiantCarte, de.IdentifiantCarte);
-                    OnReturn(null);
+                    if(de != null)
+                    {
+                        Transaction t = new Transaction(0, DateTime.Now, montant, ex.Id, de.Id);
+                        CodeResultat C1 = (Expediteur.SelectedItem as Compte).EstRetraitValide(t);
+                        CodeResultat C2 = CartePorteur.EstRetraitAutoriseNiveauCarte(t, ex, de);
+                        if (C1 == CodeResultat.OK && C2 == CodeResultat.OK)
+                        {
+                            SqlRequests.EffectuerModificationOperationInterCompte(t, ex.IdentifiantCarte, de.IdentifiantCarte);
+                            OnReturn(null);
+                        }
+                        else if (C1 != CodeResultat.OK && C2 == CodeResultat.OK)
+                        {
+                            MessageBox.Show(Tools.Label(C1));
+                        }
+                        else if (C2 != CodeResultat.OK && C1 == CodeResultat.OK)
+                        {
+                            MessageBox.Show(Tools.Label(C2));
+                        }
+                        else if (C2 != CodeResultat.OK && C1 != CodeResultat.OK)
+                        {
+                            MessageBox.Show(Tools.Label(CodeResultat.MontantInvalide));
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erreur de destinataire! Indiquez le destinataire souhaité.", "Saisie invalide", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    
                 }
-                else if (C1 != CodeResultat.OK && C2 == CodeResultat.OK)
+                else
                 {
-                    MessageBox.Show(Tools.Label(C1));
+                    MessageBox.Show("Erreur d'expéditeur! Merci de préciser l'expéditeur souhaité.", "Saisie invalide", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                else if (C2 != CodeResultat.OK && C1 == CodeResultat.OK)
-                {
-                    MessageBox.Show(Tools.Label(C2));
-                }
-                else if(C2 != CodeResultat.OK && C1 != CodeResultat.OK)
-                {
-                    MessageBox.Show(Tools.Label(CodeResultat.MontantInvalide));
-                }
+               
+               
             }
             else
             {

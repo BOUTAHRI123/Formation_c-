@@ -37,19 +37,25 @@ namespace Or.Pages
                 //Compte fictif pour permettre la transaction
                 Compte compteBanque = new Compte(0, 0, TypeCompte.Courant, 0);
                 Compte de = Destinataire.SelectedItem as Compte;
+                if(de != null){
+                    Transaction t = new Transaction(0, DateTime.Now, montant, compteBanque.Id, de.Id);
+                    CodeResultat C1 = de.EstDepotValide(t);
+                    if (C1 == CodeResultat.OK)
+                    {
+                        SqlRequests.EffectuerModificationOperationSimple(t, de.IdentifiantCarte);
 
-                Transaction t = new Transaction(0, DateTime.Now, montant,  compteBanque.Id, de.Id);
-                CodeResultat C1 = de.EstDepotValide(t);
-                if (C1 == CodeResultat.OK)
-                {
-                    SqlRequests.EffectuerModificationOperationSimple(t, de.IdentifiantCarte);
-
-                    OnReturn(null);
+                        OnReturn(null);
+                    }
+                    else
+                    {
+                        MessageBox.Show(Tools.Label(C1));
+                    }
                 }
                 else
                 {
-                    MessageBox.Show(Tools.Label(C1));
+                    MessageBox.Show("Erreur de destinataire! Indiquez le destinataire souhaité.", "Saisie invalide", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+               
             }
             else
             {

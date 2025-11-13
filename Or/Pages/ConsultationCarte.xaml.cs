@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Or.Business;
 using Or.Models;
+using Microsoft.VisualBasic;
+
+
+
 
 namespace Or.Pages
 {
@@ -17,12 +23,19 @@ namespace Or.Pages
         {
             InitializeComponent();
             Carte c = SqlRequests.InfosCarte(numCarte);
-            
-            Numero.Text = c.Id.ToString();
-            Prenom.Text = c.PrenomClient;
-            Nom.Text = c.NomClient;
+            if (c != null)
+            {
+                Numero.Text = c.Id.ToString();
+                Prenom.Text = c.PrenomClient;
+                Nom.Text = c.NomClient;
 
-            listView.ItemsSource = SqlRequests.ListeComptesAssociesCarte(numCarte);
+                listView.ItemsSource = SqlRequests.ListeComptesAssociesCarte(numCarte);
+            }
+            else
+            {
+                MessageBox.Show("Numéro de carte invalide", "Saisie invalide", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+           
         }
         private void GoDetailsCompte(object sender, RoutedEventArgs e)
         {
@@ -47,6 +60,10 @@ namespace Or.Pages
         private void GoDepot(object sender, RoutedEventArgs e)
         {
             PageFunctionNavigate(new Depot(long.Parse(Numero.Text)));
+        }
+        private void GoConseiller(object sender, RoutedEventArgs e)
+        {
+            PageFunctionNavigate(new Conseille(long.Parse(Numero.Text)));
         }
 
         void PageFunctionNavigate(PageFunction<long> page)
@@ -134,6 +151,91 @@ namespace Or.Pages
             
           
         }
+        private void GoAjouteCompte(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                long numCarte = long.Parse(Numero.Text);
+
+                // Création automatique d’un nouveau compte livret avec solde 0
+                SqlRequests.AjouterCompte(numCarte, "Livret", 0m);
+
+                MessageBox.Show("Nouveau compte Livret ajouté avec succès !", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Rafraîchir la liste des comptes affichés
+                listView.ItemsSource = SqlRequests.ListeComptesAssociesCarte(numCarte);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur lors de la création du compte Livret : " + ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void GoSuppCompte(object sender, RoutedEventArgs e)
+        {
+            long numCarte = long.Parse(Numero.Text);
+
+            // Récupère tous les comptes livret de la carte
+            var comptesLivret = SqlRequests.ListeComptesAssociesCarte(numCarte).Where(c => c.TypeDuCompte == TypeCompte.Livret).ToList();
+
+            if (comptesLivret.Count == 0)
+            {
+                MessageBox.Show("Aucun compte livret associé à cette carte.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // Si plusieurs livrets, on demande lequel supprimer
+            Compte compteASupprimer = null;
+
+            if (comptesLivret.Count == 1)
+            {
+                compteASupprimer = comptesLivret.First();
+            }
+            else
+            {
+                string message = "Sélectionnez le compte Livret à supprimer :\n\n";
+                for (int i = 0; i < comptesLivret.Count; i++)
+                {
+                    message += $"{i + 1}. ID: {comptesLivret[i].Id} — Solde: {comptesLivret[i].Solde:C2}\n";
+                }
+
+                string choix = Interaction.InputBox(message, "Suppression compte Livret", "1");
+
+                if (int.TryParse(choix, out int index) && index >= 1 && index <= comptesLivret.Count)
+                {
+                    compteASupprimer = comptesLivret[index - 1];
+                }
+                else
+                {
+                    MessageBox.Show("Choix invalide. Opération annulée.");
+                    return;
+                }
+            }
+
+            // Confirmation avant suppression
+            if (compteASupprimer != null)
+            {
+                var confirmation = MessageBox.Show($"Voulez-vous vraiment supprimer le compte Livret (ID {compteASupprimer.Id}) ?",
+                "Confirmation",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+                if (confirmation == MessageBoxResult.Yes)
+                {
+                    bool ok = SqlRequests.SupprimerCompteLivret(compteASupprimer.Id);
+                    if (ok)
+                    {
+                        MessageBox.Show("Compte Livret supprimé avec succès !");
+                        listView.ItemsSource = SqlRequests.ListeComptesAssociesCarte(numCarte); // rafraîchit l’affichage
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erreur lors de la suppression du compte.");
+                    }
+                }
+            }
+        }
+
 
 
     }
