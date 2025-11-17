@@ -12,6 +12,7 @@
         <TextBlock x:Name="Titre" HorizontalAlignment="Left" Margin="302,122,0,0" TextWrapping="Wrap" Text="BANQUE" VerticalAlignment="Top" FontSize="36" Background="White"/>
         <Button x:Name="Valider" Content="Valider" HorizontalAlignment="Left" Margin="354,310,0,0" VerticalAlignment="Top" FontSize="18" Click="GoConsultationCarte"/>
         <Button x:Name="BtnCreerCompte" Content="Créer un compte" HorizontalAlignment="Left" Margin="304,367,0,0" VerticalAlignment="Top" FontSize="16" Width="174" Height="30" Click="GoCreerCompte_Click"/>
+        <Button x:Name="BtnSupprimerCarte" Content="Supprimer une carte" HorizontalAlignment="Left" Margin="360,360,0,0" VerticalAlignment="Top" FontSize="18" Click="GoSupprimerCarte_Click"/>
         <TextBox x:Name="NumeroCarte" HorizontalAlignment="Left" Margin="288,256,0,0" Foreground="{Binding Color}" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" FontSize="20"/>
         <Label x:Name="labelN" Content="Numéro Carte" HorizontalAlignment="Left" Margin="288,225,0,0" VerticalAlignment="Top" FontSize="14"/>
 

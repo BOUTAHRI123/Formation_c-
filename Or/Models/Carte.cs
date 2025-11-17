@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Or.Business;
 
 namespace Or.Models
 {
@@ -12,15 +11,17 @@ namespace Or.Models
         public decimal Plafond { get; set; }
         public string PrenomClient { get; set; }
         public string NomClient { get; set; }
+        public int IdConseiller { get; set; }
         public List<int> ListComptesId { get; set; }
         public List<Transaction> Historique { get; private set; }
-        
-        public Carte(long id, string prenom, string nom, decimal plafondMax = 0)
+
+        public Carte(long id, string prenom, string nom, int IdCon,decimal plafondMax = 0)
         {
             Id = id;
             PrenomClient = prenom;
             NomClient = nom;
             Plafond = plafondMax == 0 ? 500 : plafondMax;
+            IdConseiller = IdCon;
             ListComptesId = new List<int>();
             Historique = new List<Transaction>();
         }

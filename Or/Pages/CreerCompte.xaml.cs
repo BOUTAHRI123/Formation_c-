@@ -29,6 +29,7 @@ namespace Or.Pages
         {
             string nom = TxtNom.Text.Trim();
             string prenom = TxtPrenom.Text.Trim();
+            int IdCon = Int32.Parse(TxtConseiller.Text.Trim());
 
             if (string.IsNullOrWhiteSpace(nom) || string.IsNullOrWhiteSpace(prenom))
             {
@@ -40,7 +41,7 @@ namespace Or.Pages
             long numCarte = GenererNumeroCarteUnique();
 
             // Création de la carte
-            SqlRequests.AjouterCarte(numCarte, nom, prenom);
+            SqlRequests.AjouterCarte(numCarte, nom, prenom,IdCon);
 
             // Création du compte courant associé
             SqlRequests.AjouterCompte(numCarte, "Courant", 0m);

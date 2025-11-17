@@ -10,30 +10,34 @@
       mc:Ignorable="d" d:DesignWidth="800"
       Title="ConsultationCarte" KeepAlive="True" Height="674">
 
-    <Grid Margin="0,0,0,-127.4">
+    <Grid Margin="0,10,0,-218.4">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="221*" />
-            <RowDefinition Height="406*" />
+            <RowDefinition Height="Auto" MinHeight="48.8" />
+            <RowDefinition Height="223*" />
+            <RowDefinition Height="32*"/>
+            <RowDefinition Height="639*" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="6*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="250*"/>
+            <ColumnDefinition Width="53*" />
+            <ColumnDefinition Width="31*"/>
+            <ColumnDefinition Width="49*" />
+            <ColumnDefinition Width="414*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Margin="10,10,10,10.2" Orientation="Vertical" Grid.Row="0" Grid.Column="0">
+        <StackPanel Margin="9.6,10,9.8,458.4" Orientation="Vertical" Grid.Row="0" Grid.Column="1">
             <TextBlock x:Name="Titre" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Consultation Carte" VerticalAlignment="Top" FontSize="20" FontWeight="SemiBold"/>
         </StackPanel>
 
-        <StackPanel Margin="10,9.8,10,5" Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+        <StackPanel Margin="9.6,60,9.8,291.2" Orientation="Vertical" Grid.Column="1">
             <TextBlock x:Name="Numero"  Margin="0,0,0,8" HorizontalAlignment="Stretch"  TextWrapping="Wrap" VerticalAlignment="Stretch" Background="#FFD2D0D0" Height="20" FontSize="14"/>
             <TextBlock x:Name="Nom"     Margin="0,0,0,8" HorizontalAlignment="Stretch"  TextWrapping="Wrap" VerticalAlignment="Stretch" Background="#FFD2D0D0" Height="20" FontSize="14"/>
             <TextBlock x:Name="Prenom"  Margin="0,0,0,8" HorizontalAlignment="Stretch"  TextWrapping="Wrap" VerticalAlignment="Stretch" Background="#FFD2D0D0" Height="20" FontSize="14"/>
 
         </StackPanel>
-        <ListView x:Name="listView" HorizontalAlignment="Left" Grid.Column="2" Grid.RowSpan="2" SizeChanged="ListView_SizeChanged" Margin="0,46,0,108" Width="470">
+        <ListView x:Name="listView" HorizontalAlignment="Left" Grid.Column="4" SizeChanged="ListView_SizeChanged" Margin="2.2,46,-9,329.4" Width="470" Grid.ColumnSpan="2">
             <ListView.Resources>
                 <ec:EuroConverter x:Key="EuroConverter"/>
             </ListView.Resources>
@@ -95,8 +99,8 @@
             </ListView.View>
         </ListView>
 
-        <StackPanel Margin="10,15,10,-26.4" Orientation="Vertical" Grid.Row="2" Grid.Column="0" >
-            <Button Content="Consulter Historique" Margin="0,0,0,8"  HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoHistoTransactions" />
+        <StackPanel Margin="9.6,240,9.8,225.6" Orientation="Vertical" Grid.Column="1" RenderTransformOrigin="0.568,0.716" Grid.RowSpan="4" >
+            <Button Content="Consulter Historique" Margin="0,0,0.2,8"  HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoHistoTransactions" />
             <Button Content="Effectuer un Retrait" Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoRetrait"/>
             <Button Content="Effectuer un Dépôt"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoDepot" />
             <Button Content="Effectuer un Virement"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoVirement" />
@@ -104,6 +108,7 @@
             <Button Content="Consulter votre conseiller"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoConseiller" />
             <Button Content="Ajouter un Compte Livret "  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoAjouteCompte" />
             <Button Content="Supprimer un Compte Livret "  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoSuppCompte" />
+            <Button Content="Changer Plafond" Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoChangerPlafond"/>
             <Label Content="Fichier à importer"/>
             <StackPanel Orientation="Horizontal">
                 <TextBox x:Name="TxtFichierImport" Width="223" Margin="0,0,10,0" Height="33"/>
@@ -111,8 +116,8 @@
 
         </StackPanel>
 
-        <Button Content="Exporter Transactions" Grid.Row="2" Grid.Column="2" Margin="0,151,82,0" HorizontalAlignment="Right" VerticalAlignment="Top"  Click="Exportfichier" Width="169" />
-        <Button Content="Importer Transactions" Grid.Row="2" Grid.Column="2" Margin="0,211,82,0" HorizontalAlignment="Right" VerticalAlignment="Top"  Click="BtnImporterTransactions_Click" Width="170" />
+        <Button Content="Exporter Transactions" Grid.Column="5" Margin="0,457,82,0" HorizontalAlignment="Right" VerticalAlignment="Top"  Click="Exportfichier" Width="169" />
+        <Button Content="Importer Transactions" Grid.Row="1" Grid.Column="5" Margin="0,18.6,82,0" HorizontalAlignment="Right" VerticalAlignment="Top"  Click="BtnImporterTransactions_Click" Width="170" />
 
     </Grid>
 </PageFunction>

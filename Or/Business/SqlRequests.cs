@@ -21,9 +21,9 @@ namespace Or.Business
         static readonly string queryComptesCarte = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE NumCarte=@Carte";
 
         static readonly string queryTransacCompte = "SELECT IdtTransaction, Horodatage, Montant, CptExpediteur, CptDestinataire, Statut FROM \"TRANSACTION\" WHERE Statut = 'O' AND (CptExpediteur=@IdtCptEx OR CptDestinataire=@IdtCptDest)";
-        static readonly string queryCarte = "SELECT NumCarte, PrenomClient, NomClient, PlafondRetrait from CARTE WHERE NumCarte=@Carte";
+        static readonly string queryCarte = "SELECT NumCarte, PrenomClient, NomClient, PlafondRetrait, IDCONSEILLER from CARTE WHERE NumCarte=@Carte";
 
-        static readonly string queryConseiller = "SELECT NOM, PRENOM , NUM, MAIL from CONSEILLE WHERE IDCARTE=@Carte";
+        static readonly string queryConseiller = "SELECT c.IDCONSEILLER, co.NOM, co.PRENOM , co.NUM, co.MAIL from CONSEILLER co INNER JOIN CARTE c ON c.IDCONSEILLER = co.IDCON WHERE c.NumCarte=@Carte";
         static readonly string queryTransacCarte = "SELECT tr.IdtTransaction, tr.Horodatage, tr.Montant, tr.CptExpediteur, tr.CptDestinataire, tr.Statut FROM \"TRANSACTION\" tr INNER JOIN HISTTRANSACTION t ON t.IdtTransaction = tr.IdtTransaction WHERE tr.Statut = 'O' AND t.NumCarte=@Carte;";
 
         static readonly string queryInsertTransac = "INSERT INTO \"TRANSACTION\" (Horodatage, Montant, CptExpediteur, CptDestinataire, Statut) VALUES (@Horodatage,@Montant,@CptExp,@CptDest,\"O\")";
@@ -32,10 +32,14 @@ namespace Or.Business
 
         static readonly string queryUpdateCompte = "UPDATE COMPTE SET Solde=Solde-@Montant WHERE IdtCpt=@IdtCompte";
         static readonly string queryComptesBenef = "SELECT B.IDBENEFICIAIRE,C.NomClient,C.PrenomClient,B.IDCOMPTE FROM BENEFICIAIRE B INNER JOIN  COMPTE CP ON B.IDCOMPTE=CP.idtcpt INNER JOIN  CARTE C ON C.NumCarte = CP.NumCarte WHERE  B.IDCARTE=@Carte ";
-        static readonly string queryCreerCompte = "INSERT INTO CARTE (NumCarte, NomClient, PrenomClient, PlafondRetrait) VALUES (@NumCarte, @Nom, @Prenom, 1000)";
+        static readonly string queryCreerCompte = "INSERT INTO CARTE (NumCarte, NomClient, PrenomClient, PlafondRetrait,IDCONSEILLER) VALUES (@NumCarte, @Nom, @Prenom, 1000,@IdCON)";
         static readonly string queryDalateBenef = "DELETE FROM BENEFICIAIRE WHERE IDBENEFICIAIRE = @IdBenef";
 
         static readonly string queryInsertBenef = "INSERT INTO BENEFICIAIRE (IdCarte, IdCompte) VALUES (@Carte, @Compte)";
+
+        static readonly string querySuppBenef = "DELETE FROM BENEFICIAIRE WHERE IDCarte = @id";
+        static readonly string querySuppCPTAss = "DELETE FROM COMPTE WHERE NumCarte = @id";
+        static readonly string querySuppCarte = "DELETE FROM CARTE WHERE NumCarte = @id";
         /// <summary>
         /// Obtention des infos d'une carte
         /// </summary>
@@ -61,6 +65,7 @@ namespace Or.Business
                         string prenom;
                         string nom;
                         int plafondRetrait;
+                        int Idcon;
 
                         if (reader.Read())
                         {
@@ -68,8 +73,8 @@ namespace Or.Business
                             prenom = reader.GetString(1);
                             nom = reader.GetString(2);
                             plafondRetrait = reader.GetInt32(3);
-
-                            carte = new Carte(idtCarte, prenom, nom, plafondRetrait);
+                            Idcon = reader.GetInt32(4);
+                            carte = new Carte(idtCarte, prenom, nom, Idcon, plafondRetrait);
                         }
                     }
                 }
@@ -634,10 +639,11 @@ namespace Or.Business
                         {
                             Conseiller = new Conseiller()
                             {
-                                Nom = reader.GetString(0),
-                                Prenom = reader.GetString(1),
-                                NTel = reader.GetString(2),
-                                Mail = reader.GetString(3),
+                                IdConseiller = reader.GetInt32(0),
+                                Nom = reader.GetString(1),
+                                Prenom = reader.GetString(2),
+                                NTel = reader.GetString(3),
+                                Mail = reader.GetString(4),
                                 Idcarte = (int)numCarte
                             };
 
@@ -673,7 +679,7 @@ namespace Or.Business
         }
 
         // Ajoute une carte
-        public static void AjouterCarte(long numCarte, string nom, string prenom)
+        public static void AjouterCarte(long numCarte, string nom, string prenom , int IdCon)
         {
             string connectionString = ConstructionConnexionString(fileDb);
             using (var connection = new SqliteConnection(connectionString))
@@ -685,6 +691,7 @@ namespace Or.Business
                     cmd.Parameters.AddWithValue("@NumCarte", numCarte);
                     cmd.Parameters.AddWithValue("@Nom", nom);
                     cmd.Parameters.AddWithValue("@Prenom", prenom);
+                    cmd.Parameters.AddWithValue("@IdCON", IdCon);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -722,6 +729,65 @@ namespace Or.Business
                 }
             }
         }
+        public static void ModifierPlafondCarte(long idCarte, decimal nouveau)
+        {
+            string query = "UPDATE CARTE SET PlafondRetrait = @p WHERE NumCarte = @id";
+
+            using (var conn = new SqliteConnection(ConstructionConnexionString(fileDb)))
+            {
+                conn.Open();
+
+                using (var cmd = new SqliteCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@p", nouveau);
+                    cmd.Parameters.AddWithValue("@id", idCarte);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void SupprimerCarteEtComptes(long idCarte)
+        {
+            string connStr = ConstructionConnexionString(fileDb);
+
+            using (var conn = new SqliteConnection(connStr))
+            {
+                conn.Open();
+
+                using (var tx = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        // Supprimer les bénéficiaires liés
+                        var cmdBenef = new SqliteCommand(querySuppBenef, conn);
+                        cmdBenef.Parameters.AddWithValue("@id", idCarte);
+                        cmdBenef.ExecuteNonQuery();
+
+                        // Supprimer les comptes de cette carte
+                        var cmdCompte = new SqliteCommand(querySuppCPTAss, conn);
+                        cmdCompte.Parameters.AddWithValue("@id", idCarte);
+                        cmdCompte.ExecuteNonQuery();
+
+                        // Supprimer la carte elle-même
+                        var cmdCarte = new SqliteCommand(querySuppCarte, conn);
+                        cmdCarte.Parameters.AddWithValue("@id", idCarte);
+                        cmdCarte.ExecuteNonQuery();
+
+                        tx.Commit();
+                    }
+                    catch
+                    {
+                        tx.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
+
+
+
 
     }
 

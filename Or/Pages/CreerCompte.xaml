@@ -10,8 +10,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="CreerCompte">
 
-    <Grid Background="#f5f6fa">
-        <Border Background="White" CornerRadius="12" Padding="30" Margin="158,10,176,48.6" BorderBrush="#dcdde1" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="391" Width="466">
+    <Grid Background="#f5f6fa" Margin="0,0,0,-109.4">
+        <Border Background="White" CornerRadius="12" Padding="30" Margin="174,29,160,60" BorderBrush="#dcdde1" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="470" Width="466">
 
             <StackPanel Width="400" Margin="1.6,-0.4,2.4,77">
 
@@ -24,6 +24,9 @@
 
                 <Label Content="Prénom du client :" FontWeight="SemiBold" Height="28"/>
                 <TextBox x:Name="TxtPrenom" Margin="0,0,0,25"/>
+
+                <Label Content="Identifiant du Conseiller :" FontWeight="SemiBold" Height="28"/>
+                <TextBox x:Name="TxtConseiller" Margin="0,0,0,25" Height="32"/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Content="Créer le compte" Width="150" Height="40"  FontWeight="Bold" Click="BtnCreer_Click" Margin="0,0,10,0"/>

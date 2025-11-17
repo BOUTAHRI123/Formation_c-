@@ -235,6 +235,11 @@ namespace Or.Pages
                 }
             }
         }
+        private void GoChangerPlafond(object sender, RoutedEventArgs e)
+        {
+            PageFunctionNavigate(new ChangerPlafond(long.Parse(Numero.Text)));
+        }
+
 
 
 
