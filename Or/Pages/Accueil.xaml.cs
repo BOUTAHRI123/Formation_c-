@@ -14,11 +14,13 @@ namespace Or.Pages
     {
         public Accueil()
         {
+          
             InitializeComponent();
         }
 
         public void GoConsultationCarte(object sender, RoutedEventArgs e)
         {
+            
             bool estCarteValide = long.TryParse(NumeroCarte.Text, out long result);
             Carte c = SqlRequests.InfosCarte(result);
             if (estCarteValide && c != null)
