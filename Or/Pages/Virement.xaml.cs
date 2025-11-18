@@ -64,6 +64,7 @@ namespace Or.Pages
                     // Si l'expéditeur est un compte Livret
                     if (ex.TypeDuCompte == TypeCompte.Livret)
                     {
+                        Solde.Text = ex.Solde.ToString("C2");
                         // On ne peut faire un virement que vers le compte Courant de la même carte
                         var comptesCarte = SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id);
                         var compteCourant = comptesCarte.FirstOrDefault(c => c.TypeDuCompte == TypeCompte.Courant);
