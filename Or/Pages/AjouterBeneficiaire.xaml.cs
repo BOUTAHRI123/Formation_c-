@@ -48,7 +48,7 @@ namespace Or.Pages
             // Vérifier si ce bénéficiaire existe déjà
             if (SqlRequests.ExisteBeneficiaire(IdCarte, idCompte))
             {
-                MessageBox.Show("Ce bénéficiaire existe déjà.");
+                MessageBox.Show("Ce bénéficiaire existe déjà.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (compte.TypeDuCompte == TypeCompte.Livret)
@@ -65,7 +65,7 @@ namespace Or.Pages
                         try
                         {
                             SqlRequests.AjouterBeneficiaire(IdCarte, idCompte);
-                            MessageBox.Show("Bénéficiaire ajouté avec succès !");
+                            MessageBox.Show("Bénéficiaire ajouté avec succès !", "Bien faite", MessageBoxButton.OK, MessageBoxImage.Information);
                             OnReturn(null);
                         }
                         catch (Exception ex)
@@ -93,7 +93,7 @@ namespace Or.Pages
                     try
                     {
                         SqlRequests.AjouterBeneficiaire(IdCarte, idCompte);
-                        MessageBox.Show($"Bénéficiaire ajouté avec succès !");
+                        MessageBox.Show($"Bénéficiaire ajouté avec succès !", "Bien faite", MessageBoxButton.OK, MessageBoxImage.Information);
                         OnReturn(null);
                     }
                     catch (Exception ex)

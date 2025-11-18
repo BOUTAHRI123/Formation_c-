@@ -12,10 +12,10 @@
       Title="Virement" KeepAlive="True">
 
     <Grid>
-        <TextBlock x:Name="Titre" HorizontalAlignment="Left" Margin="100,85,0,0" TextWrapping="Wrap" Text="Virement" VerticalAlignment="Top" FontSize="20" FontWeight="SemiBold"/>
+        <TextBlock x:Name="Titre" HorizontalAlignment="Left" Margin="74,39,0,0" TextWrapping="Wrap" Text="Virement" VerticalAlignment="Top" FontSize="20" FontWeight="SemiBold"/>
 
-        <Label x:Name="labelE" Content="Compte à débiter" HorizontalAlignment="Left" Margin="100,180,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.237,0.385"/>
-        <ComboBox x:Name="Expediteur" HorizontalAlignment="Left" Margin="100,210,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="Expediteur_SelectionChanged" >
+        <Label x:Name="labelE" Content="Compte à débiter" HorizontalAlignment="Left" Margin="100,250,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.237,0.385"/>
+        <ComboBox x:Name="Expediteur" HorizontalAlignment="Left" Margin="100,276,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="Expediteur_SelectionChanged" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock>
@@ -40,8 +40,8 @@
             </ComboBox.GroupStyle>
         </ComboBox>
 
-        <Label x:Name="labelD" Content="Compte à créditer" HorizontalAlignment="Left" Margin="300,180,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="Destinataire" HorizontalAlignment="Left" Margin="300,210,0,0" VerticalAlignment="Top" Width="120" >
+        <Label x:Name="labelD" Content="Compte à créditer" HorizontalAlignment="Left" Margin="300,246,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="Destinataire" HorizontalAlignment="Left" Margin="300,278,0,0" VerticalAlignment="Top" Width="120" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock>
@@ -66,13 +66,23 @@
                 </GroupStyle>
             </ComboBox.GroupStyle>
         </ComboBox>
+        <StackPanel Margin="10" Orientation="Vertical" Grid.Row="1" Grid.Column="2">
+            <Label x:Name="labelP" Content="Plafond maximum de retrait" HorizontalAlignment="Stretch" Margin="512,0,-512,8" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27" FontSize="14"/>
+            <TextBlock x:Name="PlafondMaxRetrait" HorizontalAlignment="Left" Margin="520,0,0,8" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Background="#FFD2D0D0" Height="20" FontSize="14"/>
 
-        <Label x:Name="labelM" Content="Montant" HorizontalAlignment="Left" Margin="500,180,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27"/>
-        <TextBox x:Name="Montant" HorizontalAlignment="Left" Margin="500,210,0,0" VerticalAlignment="Top" Width="120" Height="22" TextAlignment="Right" TextWrapping="Wrap"/>
+            <Label x:Name="labelP2" Content="Plafond de retrait actualisé" HorizontalAlignment="Stretch" Margin="512,0,-512,8" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27" FontSize="14"/>
+            <TextBlock x:Name="PlafondActuelRetrait" HorizontalAlignment="Left" Margin="520,0,0,8" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Background="#FFD2D0D0" Height="20" FontSize="14"/>
 
-        <Button x:Name="Retour" Content="Retour" HorizontalAlignment="Left" Margin="100,330,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="Retour_Click"/>
-        <Button Content="Ajouter un bénéficiaire" Margin="272,330,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"  Click="BtnAjouter_Click" />
-        <Button x:Name="button" Content="Valider" HorizontalAlignment="Left" Margin="555,330,0,0" VerticalAlignment="Top" Width="80" Height="30" Click="ValiderVirement_Click"/>
+            <Label x:Name="labelS" Content="Solde compte courant" HorizontalAlignment="Stretch" Margin="512,0,-512,8" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27" FontSize="14"/>
+            <TextBlock x:Name="Solde" HorizontalAlignment="Left" Margin="520,0,0,8" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Background="#FFD2D0D0" Height="20" FontSize="14"/>
+        </StackPanel>
+
+        <Label x:Name="labelM" Content="Montant" HorizontalAlignment="Left" Margin="500,246,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27"/>
+        <TextBox x:Name="Montant" HorizontalAlignment="Left" Margin="500,282,0,0" VerticalAlignment="Top" Width="120" Height="22" TextAlignment="Right" TextWrapping="Wrap"/>
+
+        <Button x:Name="Retour" Content="Retour" HorizontalAlignment="Left" Margin="100,364,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="Retour_Click"/>
+        <Button Content="Ajouter un bénéficiaire" Margin="272,360,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"  Click="BtnAjouter_Click" />
+        <Button x:Name="button" Content="Valider" HorizontalAlignment="Left" Margin="555,360,0,0" VerticalAlignment="Top" Width="80" Height="30" Click="ValiderVirement_Click"/>
        
     </Grid>
 </PageFunction>

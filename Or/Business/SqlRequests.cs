@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Or.Business
 {
@@ -40,6 +41,7 @@ namespace Or.Business
         static readonly string querySuppBenef = "DELETE FROM BENEFICIAIRE WHERE IDCarte = @id";
         static readonly string querySuppCPTAss = "DELETE FROM COMPTE WHERE NumCarte = @id";
         static readonly string querySuppCarte = "DELETE FROM CARTE WHERE NumCarte = @id";
+
         /// <summary>
         /// Obtention des infos d'une carte
         /// </summary>
@@ -647,7 +649,7 @@ namespace Or.Business
                                 Idcarte = (int)numCarte
                             };
 
-                            
+
 
                         }
                     }
@@ -679,13 +681,13 @@ namespace Or.Business
         }
 
         // Ajoute une carte
-        public static void AjouterCarte(long numCarte, string nom, string prenom , int IdCon)
+        public static void AjouterCarte(long numCarte, string nom, string prenom, int IdCon)
         {
             string connectionString = ConstructionConnexionString(fileDb);
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
-                
+
                 using (var cmd = new SqliteCommand(queryCreerCompte, connection))
                 {
                     cmd.Parameters.AddWithValue("@NumCarte", numCarte);
@@ -714,21 +716,74 @@ namespace Or.Business
                 }
             }
         }
-        public static bool SupprimerCompteLivret(int idCompte)
+
+        public static bool SupprimerCompteLivret(int idCompteLivret, long idCarte)
         {
             string connectionString = ConstructionConnexionString(fileDb);
 
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
-                using (var command = new SqliteCommand("DELETE FROM COMPTE WHERE IdtCpt=@IdtCpt AND TypeCompte='Livret'", connection))
+
+                // Récupérer le solde du livret
+                decimal soldeLivret = 0;
+                using (var cmd = new SqliteCommand("SELECT Solde FROM COMPTE WHERE IdtCpt=@id", connection))
                 {
-                    command.Parameters.AddWithValue("@IdtCpt", idCompte);
-                    int rowsAffected = command.ExecuteNonQuery();
-                    return rowsAffected > 0;
+                    cmd.Parameters.AddWithValue("@id", idCompteLivret);
+                    object result = cmd.ExecuteScalar();
+                    if (result == null) return false;
+                    soldeLivret = Convert.ToDecimal(result);
+                }
+
+                // Récupérer le compte courant de la même carte
+                int idCompteCourant = 0;
+                using (var cmd = new SqliteCommand(
+                "SELECT IdtCpt FROM COMPTE WHERE NumCarte=@carte AND TypeCompte='Courant'", connection))
+                {
+                    cmd.Parameters.AddWithValue("@carte", idCarte);
+                    object result = cmd.ExecuteScalar();
+                    if (result == null)
+                    {
+                        MessageBox.Show("Aucun compte courant associé à cette carte !");
+                        return false;
+                    }
+                    idCompteCourant = Convert.ToInt32(result);
+                }
+
+                // Ajouter le solde du livret au solde du compte courant
+                using (var cmd = new SqliteCommand(
+                "UPDATE COMPTE SET Solde = Solde + @montant WHERE IdtCpt=@id", connection))
+                {
+                    cmd.Parameters.AddWithValue("@montant", soldeLivret);
+                    cmd.Parameters.AddWithValue("@id", idCompteCourant);
+                    cmd.ExecuteNonQuery();
+                }
+
+                //  Supprimer l’historique de transaction lié au compte livret
+                using (var cmd = new SqliteCommand(@"DELETE FROM HISTTRANSACTION WHERE IdtTransaction IN (SELECT IdtTransaction FROM 'TRANSACTION' WHERE CptExpediteur=@id OR CptDestinataire=@id)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@id", idCompteLivret);
+                    cmd.ExecuteNonQuery();
+                }
+
+                // 5️⃣ Supprimer les transactions liées au compte livret
+                using (var cmd = new SqliteCommand(@"DELETE FROM 'TRANSACTION' WHERE CptExpediteur=@id OR CptDestinataire=@id", connection))
+                {
+                    cmd.Parameters.AddWithValue("@id", idCompteLivret);
+                    cmd.ExecuteNonQuery();
+                }
+
+                // 6️⃣ Supprimer enfin le compte Livret
+                using (var cmd = new SqliteCommand("DELETE FROM COMPTE WHERE IdtCpt=@id AND TypeCompte='Livret'", connection))
+                {
+                    cmd.Parameters.AddWithValue("@id", idCompteLivret);
+                    int rows = cmd.ExecuteNonQuery();
+                    return rows > 0;
                 }
             }
         }
+      
+
         public static void ModifierPlafondCarte(long idCarte, decimal nouveau)
         {
             string query = "UPDATE CARTE SET PlafondRetrait = @p WHERE NumCarte = @id";
@@ -751,36 +806,78 @@ namespace Or.Business
         {
             string connStr = ConstructionConnexionString(fileDb);
 
+            // On récupère les comptes AVANT
+            var comptes = ListeComptesAssociesCarte(idCarte);
+            var listeIdsComptes = comptes.Select(c => c.Id).ToList();
+
             using (var conn = new SqliteConnection(connStr))
             {
                 conn.Open();
 
-                using (var tx = conn.BeginTransaction())
+                // Empêche les erreurs "database is locked"
+                using (var pragmaTimeout = conn.CreateCommand())
                 {
-                    try
+                    pragmaTimeout.CommandText = "PRAGMA busy_timeout = 3000";
+                    pragmaTimeout.ExecuteNonQuery();
+                }
+
+                // Active vraiment les foreign keys
+                using (var pragmaFK = conn.CreateCommand())
+                {
+                    pragmaFK.CommandText = "PRAGMA foreign_keys = ON";
+                    pragmaFK.ExecuteNonQuery();
+                }
+
+                try
+                {
+                    //  Supprimer les bénéficiaires
+                    using (var cmdBenef = conn.CreateCommand())
                     {
-                        // Supprimer les bénéficiaires liés
-                        var cmdBenef = new SqliteCommand(querySuppBenef, conn);
+                        cmdBenef.CommandText = querySuppBenef;
                         cmdBenef.Parameters.AddWithValue("@id", idCarte);
                         cmdBenef.ExecuteNonQuery();
+                    }
+                    //  Supprimer l’historique des transactions
+                    using (var cmdHTran = conn.CreateCommand())
+                    {
+                        cmdHTran.CommandText = "DELETE FROM HISTTRANSACTION WHERE NumCarte=@id";
+                        cmdHTran.Parameters.AddWithValue("@id", idCarte);
+                        cmdHTran.ExecuteNonQuery();
+                    }
 
-                        // Supprimer les comptes de cette carte
-                        var cmdCompte = new SqliteCommand(querySuppCPTAss, conn);
+                    // Supprimer les transactions liées aux comptes
+                    if (listeIdsComptes.Count > 0)
+                    {
+                        string ids = string.Join(",", listeIdsComptes);
+
+                        using (var cmdTransaction = conn.CreateCommand())
+                        {
+                            cmdTransaction.CommandText = $@"DELETE FROM ""TRANSACTION"" WHERE CptExpediteur IN ({ids}) OR CptDestinataire IN ({ids})";
+                            cmdTransaction.ExecuteNonQuery();
+                        }
+                    }
+
+                   
+
+                    // Supprimer les comptes associés
+                    using (var cmdCompte = conn.CreateCommand())
+                    {
+                        cmdCompte.CommandText = querySuppCPTAss;
                         cmdCompte.Parameters.AddWithValue("@id", idCarte);
                         cmdCompte.ExecuteNonQuery();
+                    }
 
-                        // Supprimer la carte elle-même
-                        var cmdCarte = new SqliteCommand(querySuppCarte, conn);
+                    // Supprimer la carte elle-même
+                    using (var cmdCarte = conn.CreateCommand())
+                    {
+                        cmdCarte.CommandText = querySuppCarte;
                         cmdCarte.Parameters.AddWithValue("@id", idCarte);
                         cmdCarte.ExecuteNonQuery();
-
-                        tx.Commit();
                     }
-                    catch
-                    {
-                        tx.Rollback();
-                        throw;
-                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Erreur SQL : " + ex.Message);
                 }
             }
         }

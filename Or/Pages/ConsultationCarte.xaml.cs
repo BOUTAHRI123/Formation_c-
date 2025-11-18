@@ -207,7 +207,7 @@ namespace Or.Pages
                 }
                 else
                 {
-                    MessageBox.Show("Choix invalide. Opération annulée.");
+                    MessageBox.Show("Choix invalide. Opération annulée.","Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
             }
@@ -222,15 +222,15 @@ namespace Or.Pages
 
                 if (confirmation == MessageBoxResult.Yes)
                 {
-                    bool ok = SqlRequests.SupprimerCompteLivret(compteASupprimer.Id);
+                    bool ok = SqlRequests.SupprimerCompteLivret(compteASupprimer.Id , numCarte);
                     if (ok)
                     {
-                        MessageBox.Show("Compte Livret supprimé avec succès !");
+                        MessageBox.Show("Compte Livret supprimé avec succès !","Information", MessageBoxButton.OK, MessageBoxImage.Information);
                         listView.ItemsSource = SqlRequests.ListeComptesAssociesCarte(numCarte); // rafraîchit l’affichage
                     }
                     else
                     {
-                        MessageBox.Show("Erreur lors de la suppression du compte.");
+                        MessageBox.Show("Erreur lors de la suppression du compte.","Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
@@ -239,9 +239,10 @@ namespace Or.Pages
         {
             PageFunctionNavigate(new ChangerPlafond(long.Parse(Numero.Text)));
         }
-
-
-
+        private void Retour_Click(object sender, RoutedEventArgs e)
+        {
+            OnReturn(null);
+        }
 
     }
 }

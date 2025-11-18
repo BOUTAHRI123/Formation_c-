@@ -32,8 +32,11 @@ namespace Or.Pages
             CartePorteur = SqlRequests.InfosCarte(numCarte);
             CartePorteur.AlimenterHistoriqueEtListeComptes(SqlRequests.ListeTransactionsAssociesCarte(numCarte), SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id).Select(x=>x.Id).ToList());
             ComptePorteur = SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id).Find(x => x.TypeDuCompte == TypeCompte.Courant);
+            PlafondMaxRetrait.Text = CartePorteur.Plafond.ToString("C2");
+            Solde.Text = ComptePorteur.Solde.ToString("C2");
+            // OK - fonctionnement normal
+            PlafondActuelRetrait.Text = CartePorteur.SoldeCarteActuel(DateTime.Now).ToString("C2");
 
-            
             var viewExpediteur = CollectionViewSource.GetDefaultView(SqlRequests.ListeComptesAssociesCarte(numCarte));
             viewExpediteur.GroupDescriptions.Add(new PropertyGroupDescription("TypeDuCompte"));
             viewExpediteur.SortDescriptions.Add(new SortDescription("TypeDuCompte", ListSortDirection.Ascending));
