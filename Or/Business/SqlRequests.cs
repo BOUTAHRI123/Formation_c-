@@ -153,10 +153,13 @@ namespace Or.Business
                             comptes.Add(compte);
                         }
                     }
+                    
                 }
+                connection.Close();
             }
-
+            
             return comptes;
+            
         }
 
 
@@ -804,24 +807,23 @@ namespace Or.Business
 
         public static void SupprimerCarteEtComptes(long idCarte)
         {
-            string connStr = ConstructionConnexionString(fileDb);
+            // On récupère les comptes AVANT toute ouverture
+            var comptes = ListeComptesAssociesCarte(idCarte).Select(c => new { c.Id }).ToList();
 
-            // On récupère les comptes AVANT
-            var comptes = ListeComptesAssociesCarte(idCarte);
             var listeIdsComptes = comptes.Select(c => c.Id).ToList();
+
+            string connStr = ConstructionConnexionString(fileDb);
 
             using (var conn = new SqliteConnection(connStr))
             {
                 conn.Open();
 
-                // Empêche les erreurs "database is locked"
                 using (var pragmaTimeout = conn.CreateCommand())
                 {
                     pragmaTimeout.CommandText = "PRAGMA busy_timeout = 3000";
                     pragmaTimeout.ExecuteNonQuery();
                 }
 
-                // Active vraiment les foreign keys
                 using (var pragmaFK = conn.CreateCommand())
                 {
                     pragmaFK.CommandText = "PRAGMA foreign_keys = ON";
@@ -830,14 +832,26 @@ namespace Or.Business
 
                 try
                 {
-                    //  Supprimer les bénéficiaires
+                    // Supprimer les bénéficiaires liés à cette carte
                     using (var cmdBenef = conn.CreateCommand())
                     {
-                        cmdBenef.CommandText = querySuppBenef;
+                        cmdBenef.CommandText = "DELETE FROM BENEFICIAIRE WHERE IDCarte = @id";
                         cmdBenef.Parameters.AddWithValue("@id", idCarte);
                         cmdBenef.ExecuteNonQuery();
                     }
-                    //  Supprimer l’historique des transactions
+
+                    // Supprimer bénéficiaires où un compte supprimé est enregistré
+                    if (listeIdsComptes.Count > 0)
+                    {
+                        using (var cmdSuppBenefCompte = conn.CreateCommand())
+                        {
+                            cmdSuppBenefCompte.CommandText =
+                            $"DELETE FROM BENEFICIAIRE WHERE IDCompte IN ({string.Join(",", listeIdsComptes)})";
+                            cmdSuppBenefCompte.ExecuteNonQuery();
+                        }
+                    }
+
+                    // Supprimer historique
                     using (var cmdHTran = conn.CreateCommand())
                     {
                         cmdHTran.CommandText = "DELETE FROM HISTTRANSACTION WHERE NumCarte=@id";
@@ -845,32 +859,30 @@ namespace Or.Business
                         cmdHTran.ExecuteNonQuery();
                     }
 
-                    // Supprimer les transactions liées aux comptes
-                    if (listeIdsComptes.Count > 0)
+                    // Supprimer transactions liées
+                    /*if (listeIdsComptes.Count > 0)
                     {
-                        string ids = string.Join(",", listeIdsComptes);
-
                         using (var cmdTransaction = conn.CreateCommand())
                         {
-                            cmdTransaction.CommandText = $@"DELETE FROM ""TRANSACTION"" WHERE CptExpediteur IN ({ids}) OR CptDestinataire IN ({ids})";
+                            cmdTransaction.CommandText =
+                            $"DELETE FROM \"TRANSACTION\" WHERE CptExpediteur IN ({string.Join(",", listeIdsComptes)}) " + $"OR CptDestinataire IN ({string.Join(",", listeIdsComptes)})";
+
                             cmdTransaction.ExecuteNonQuery();
                         }
-                    }
+                    }*/
 
-                   
-
-                    // Supprimer les comptes associés
+                    // Supprimer les comptes
                     using (var cmdCompte = conn.CreateCommand())
                     {
-                        cmdCompte.CommandText = querySuppCPTAss;
+                        cmdCompte.CommandText = "DELETE FROM COMPTE WHERE NumCarte = @id";
                         cmdCompte.Parameters.AddWithValue("@id", idCarte);
                         cmdCompte.ExecuteNonQuery();
                     }
 
-                    // Supprimer la carte elle-même
+                    // Supprimer la carte
                     using (var cmdCarte = conn.CreateCommand())
                     {
-                        cmdCarte.CommandText = querySuppCarte;
+                        cmdCarte.CommandText = "DELETE FROM CARTE WHERE NumCarte=@id";
                         cmdCarte.Parameters.AddWithValue("@id", idCarte);
                         cmdCarte.ExecuteNonQuery();
                     }
@@ -881,10 +893,6 @@ namespace Or.Business
                 }
             }
         }
-
-
-
-
 
     }
 

@@ -93,7 +93,7 @@ namespace Or.Pages
                     try
                     {
                         SqlRequests.AjouterBeneficiaire(IdCarte, idCompte);
-                        MessageBox.Show($"Bénéficiaire ajouté avec succès !", "Bien faite", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show($"Bénéficiaire  ajouté avec succès !", "Bien faite", MessageBoxButton.OK, MessageBoxImage.Information);
                         OnReturn(null);
                     }
                     catch (Exception ex)

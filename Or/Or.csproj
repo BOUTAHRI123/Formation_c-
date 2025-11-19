@@ -113,6 +113,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\SimulationCredit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Retrait.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -165,6 +169,9 @@
     </Compile>
     <Compile Include="Pages\ChangerPlafond.xaml.cs">
       <DependentUpon>ChangerPlafond.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SimulationCredit.xaml.cs">
+      <DependentUpon>SimulationCredit.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Retrait.xaml.cs">
       <DependentUpon>Retrait.xaml</DependentUpon>

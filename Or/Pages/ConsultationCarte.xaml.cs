@@ -235,6 +235,7 @@ namespace Or.Pages
                 }
             }
         }
+        // Changer le plafond de la carte 
         private void GoChangerPlafond(object sender, RoutedEventArgs e)
         {
             PageFunctionNavigate(new ChangerPlafond(long.Parse(Numero.Text)));
@@ -243,6 +244,12 @@ namespace Or.Pages
         {
 
             NavigationService.Navigate(new Accueil());
+        }
+        // Faire une simulation du crédit 
+        private void GoSimulationCredit(object sender, RoutedEventArgs e)
+        {
+            SimulationCredit fen = new SimulationCredit(long.Parse(Numero.Text));
+            fen.ShowDialog();
         }
 
     }

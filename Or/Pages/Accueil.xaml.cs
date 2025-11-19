@@ -54,7 +54,7 @@ namespace Or.Pages
 
             if (!long.TryParse(num, out long idCarte))
             {
-                MessageBox.Show("Numéro de carte invalide.");
+                MessageBox.Show("Numéro de carte invalide.","Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace Or.Pages
             Carte c = SqlRequests.InfosCarte(idCarte);
             if (c == null)
             {
-                MessageBox.Show("Cette carte n'existe pas !");
+                MessageBox.Show("Cette carte n'existe pas !","Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -73,7 +73,7 @@ namespace Or.Pages
             try
             {
                 SqlRequests.SupprimerCarteEtComptes(idCarte);
-                MessageBox.Show("Carte supprimée avec succès.");
+                MessageBox.Show("Carte supprimée avec succès.","Bien faite",MessageBoxButton.OK,MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
