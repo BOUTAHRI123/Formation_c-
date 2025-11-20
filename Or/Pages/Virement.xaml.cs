@@ -58,6 +58,7 @@ namespace Or.Pages
             try
             {
                 List<Compte> listeDestinataires = new List<Compte>();
+                List<Compte> ComptesLivret = new List<Compte>();
 
                 if (Expediteur.SelectedItem is Compte ex)
                 {
@@ -68,11 +69,14 @@ namespace Or.Pages
                         // On ne peut faire un virement que vers le compte Courant de la même carte
                         var comptesCarte = SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id);
                         var compteCourant = comptesCarte.FirstOrDefault(c => c.TypeDuCompte == TypeCompte.Courant);
-
-                        if (compteCourant != null && compteCourant.Id != ex.Id)
+                        foreach(Compte C in comptesCarte)
                         {
-                            listeDestinataires.Add(compteCourant);
+                            if (C != null && C.Id != ex.Id)
+                            {
+                                listeDestinataires.Add(C);
+                            }
                         }
+                        
                     }
                     else
                     {
@@ -92,13 +96,14 @@ namespace Or.Pages
 
                         // Ajouter le compte Livret de la même carte
                         var comptesCarte = SqlRequests.ListeComptesAssociesCarte(CartePorteur.Id);
-                        var compteLivret = comptesCarte.FirstOrDefault(c => c.TypeDuCompte == TypeCompte.Livret);
-                        if (compteLivret != null && compteLivret.Id != ex.Id)
+                        var compteLivret = comptesCarte.Where(c => c.TypeDuCompte == TypeCompte.Livret);
+                        foreach(Compte Co in compteLivret)
+                        if (Co != null && Co.Id != ex.Id)
                         {
                             // On ne le rajoute que s'il n'est pas déjà dans la liste
-                            if (!listeDestinataires.Any(c => c.Id == compteLivret.Id))
+                            if (!listeDestinataires.Any(c => c.Id == Co.Id))
                             {
-                                listeDestinataires.Add(compteLivret);
+                                listeDestinataires.Add(Co);
                             }
                         }
                     }
