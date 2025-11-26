@@ -639,7 +639,6 @@ namespace Or.Business
                     using (var reader = command.ExecuteReader())
                     {
 
-
                         while (reader.Read())
                         {
                             Conseiller = new Conseiller()
@@ -651,8 +650,6 @@ namespace Or.Business
                                 Mail = reader.GetString(4),
                                 Idcarte = (int)numCarte
                             };
-
-
 
                         }
                     }
@@ -762,21 +759,21 @@ namespace Or.Business
                     cmd.ExecuteNonQuery();
                 }
 
-                //  Supprimer l’historique de transaction lié au compte livret
+                // Supprimer l’historique de transaction lié au compte livret
                 using (var cmd = new SqliteCommand(@"DELETE FROM HISTTRANSACTION WHERE IdtTransaction IN (SELECT IdtTransaction FROM 'TRANSACTION' WHERE CptExpediteur=@id OR CptDestinataire=@id)", connection))
                 {
                     cmd.Parameters.AddWithValue("@id", idCompteLivret);
                     cmd.ExecuteNonQuery();
                 }
 
-                // 5️⃣ Supprimer les transactions liées au compte livret
+                // Supprimer les transactions liées au compte livret
                 using (var cmd = new SqliteCommand(@"DELETE FROM 'TRANSACTION' WHERE CptExpediteur=@id OR CptDestinataire=@id", connection))
                 {
                     cmd.Parameters.AddWithValue("@id", idCompteLivret);
                     cmd.ExecuteNonQuery();
                 }
 
-                // 6️⃣ Supprimer enfin le compte Livret
+                // Supprimer enfin le compte Livret
                 using (var cmd = new SqliteCommand("DELETE FROM COMPTE WHERE IdtCpt=@id AND TypeCompte='Livret'", connection))
                 {
                     cmd.Parameters.AddWithValue("@id", idCompteLivret);

@@ -115,7 +115,7 @@
             </StackPanel>
 
         </StackPanel>
-        <Button Content="Simulation Crédit" Grid.Column="5" Margin="163.4,391,82,72.2" HorizontalAlignment="Stretch" Click="GoSimulationCredit" Width="169"/>
+        <Button Content="Simulation Crédit" Grid.Column="5" Margin="159.4,391,86,72.2" HorizontalAlignment="Stretch" Click="GoSimulationCredit" Width="169"/>
         <Button Content="Exporter Transactions" Grid.Column="5" Margin="0,457,82,6.2" HorizontalAlignment="Right"  Click="Exportfichier" Width="169" Height="Auto" />
         <Button Content="Importer Transactions" Grid.Row="1" Grid.Column="5" Margin="0,18.6,82,0" HorizontalAlignment="Right" VerticalAlignment="Top"  Click="BtnImporterTransactions_Click" Width="170" />
         <Button Content="Retour" Grid.Row="3" Grid.Column="5" Margin="0,5.4,117,238.6" HorizontalAlignment="Right"  Click="Retour_Click" Width="100" Height="Auto" />

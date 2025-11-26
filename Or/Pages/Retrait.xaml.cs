@@ -71,7 +71,7 @@ namespace Or.Pages
             }
             else
             {
-                MessageBox.Show("Montant invalide");
+                MessageBox.Show("Montant invalide","Erreur",MessageBoxButton.OK,MessageBoxImage.Error);
             }
         }
       

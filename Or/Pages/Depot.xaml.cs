@@ -59,7 +59,7 @@ namespace Or.Pages
             }
             else
             {
-                MessageBox.Show("Montant invalide");
+                MessageBox.Show(Tools.Label(CodeResultat.MontantInvalide), "Saisie invalide", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

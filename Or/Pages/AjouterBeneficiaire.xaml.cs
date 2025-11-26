@@ -35,14 +35,14 @@ namespace Or.Pages
             // Vérification de la saisie
             if (!int.TryParse(IdCompte.Text, out int idCompte))
             {
-                MessageBox.Show("Numéro de compte invalide !");
+                MessageBox.Show("Numéro de compte invalide !", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             // Vérification que le compte existe et est de type "Courant"
             Compte compte = SqlRequests.ObtenirCompteParId(idCompte);
             if (compte == null)
             {
-                MessageBox.Show("Ce compte n’existe pas !");
+                MessageBox.Show("Ce compte n’existe pas !", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             // Vérifier si ce bénéficiaire existe déjà

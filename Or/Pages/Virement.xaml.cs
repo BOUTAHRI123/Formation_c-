@@ -160,7 +160,7 @@ namespace Or.Pages
                         }
                         else if (C2 != CodeResultat.OK && C1 != CodeResultat.OK)
                         {
-                            MessageBox.Show(Tools.Label(CodeResultat.MontantInvalide));
+                            MessageBox.Show(Tools.Label(CodeResultat.MontantInvalide), "Saisie invalide", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     else
@@ -178,7 +178,7 @@ namespace Or.Pages
             }
             else
             {
-                MessageBox.Show(Tools.Label(CodeResultat.MontantInvalide));
+                MessageBox.Show(Tools.Label(CodeResultat.MontantInvalide), "Saisie invalide", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
         }

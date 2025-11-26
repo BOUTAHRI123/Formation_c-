@@ -115,7 +115,7 @@ namespace Or.Pages
             // Vérification d'existence du fichier
             if (!File.Exists(fichierImport))
             {
-                MessageBox.Show("Fichier introuvable !");
+                MessageBox.Show("Fichier introuvable !","Erreur",MessageBoxButton.OK,MessageBoxImage.Error);
                 return;
             }
             // Création de la liste des exportComptes afin de stocker les comptes importer 
@@ -146,7 +146,7 @@ namespace Or.Pages
         
             if(ComptesImport.Count != 0)
             {
-                MessageBox.Show("Importation des transactions réussie !");
+                MessageBox.Show("Importation des transactions réussie !","Information",MessageBoxButton.OK,MessageBoxImage.Information);
             }
             
           

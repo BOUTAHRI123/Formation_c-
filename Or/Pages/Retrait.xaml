@@ -12,9 +12,9 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" MinHeight="63.2"/>
+            <RowDefinition Height="Auto" MinHeight="206.4" />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -23,31 +23,31 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Margin="10" Orientation="Vertical" Grid.Row="0" Grid.Column="0">
-            <TextBlock x:Name="Titre" HorizontalAlignment="Stretch" Margin="0,0,0,0" TextWrapping="Wrap" Text="Retrait" VerticalAlignment="Top" FontSize="20" FontWeight="SemiBold"/>
+        <StackPanel Margin="10,32,10.2,194.6" Orientation="Vertical" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
+            <TextBlock x:Name="Titre" HorizontalAlignment="Stretch" Margin="0,0,0.2,0" TextWrapping="Wrap" Text="Retrait" VerticalAlignment="Top" FontSize="20" FontWeight="SemiBold"/>
         </StackPanel>
 
-        <StackPanel Margin="10" Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+        <StackPanel Margin="30,100.8,256.6,1.6" Orientation="Vertical" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
             <Label x:Name="labelM" Content="Montant" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27" FontSize="14"/>
             <TextBox x:Name="Montant" HorizontalAlignment="Left" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextAlignment="Right"/>
         </StackPanel>
 
-        <StackPanel Margin="10" Orientation="Vertical" Grid.Row="1" Grid.Column="2">
+        <StackPanel Margin="10.4,9.8,10,9.6" Orientation="Vertical" Grid.Row="1" Grid.Column="2">
             <Label x:Name="labelP" Content="Plafond maximum de retrait" HorizontalAlignment="Stretch" Margin="0,0,0,8" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27" FontSize="14"/>
             <TextBlock x:Name="PlafondMaxRetrait" HorizontalAlignment="Left" Margin="0,0,0,8" TextAlignment="left" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Background="#FFD2D0D0" Height="20" FontSize="14"/>
 
             <Label x:Name="labelP2" Content="Plafond de retrait actualisé" HorizontalAlignment="Stretch" Margin="0,0,0,8" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27" FontSize="14"/>
             <TextBlock x:Name="PlafondActuelRetrait" HorizontalAlignment="Left" Margin="0,0,0,8" TextAlignment="left" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Background="#FFD2D0D0" Height="20" FontSize="14"/>
-            
+
             <Label x:Name="labelS" Content="Solde compte courant" HorizontalAlignment="Stretch" Margin="0,0,0,8" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.27" FontSize="14"/>
             <TextBlock x:Name="Solde" HorizontalAlignment="Left" Margin="0,0,0,8" TextAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Background="#FFD2D0D0" Height="20" FontSize="14"/>
         </StackPanel>
 
-        <StackPanel Margin="10" Orientation="Vertical" Grid.Row="2" Grid.Column="2">
-            <Button x:Name="Retour" Content="Retour" HorizontalAlignment="Stretch" Margin="0,0,0,0" MaxWidth="80" VerticalAlignment="Top" Click="Retour_Click"/>
+        <StackPanel Margin="20.4,20.4,0,-0.4" Orientation="Vertical" Grid.Row="2" Grid.Column="2">
+            <Button x:Name="Retour" Content="Retour" HorizontalAlignment="Stretch" Margin="0,0,-0.4,0" MaxWidth="80" VerticalAlignment="Top" Click="Retour_Click"/>
         </StackPanel>
-        <StackPanel Margin="10" Orientation="Vertical" Grid.Row="2" Grid.Column="0">
-        <Button x:Name="button" Content="Valider" HorizontalAlignment="Stretch" Margin="0,0,0,0" MaxWidth="80" VerticalAlignment="Top" Click="ValiderRetrait_Click"/>
+        <StackPanel Margin="10,10.4,10.2,9.6" Orientation="Vertical" Grid.Row="2" Grid.Column="0">
+            <Button x:Name="button" Content="Valider" HorizontalAlignment="Stretch" Margin="0,0,0.2,0" MaxWidth="80" VerticalAlignment="Top" Click="ValiderRetrait_Click"/>
         </StackPanel>
     </Grid>
 </PageFunction>
